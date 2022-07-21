@@ -1,9 +1,14 @@
-import 'dart:io';
+// import 'dart:io';
+// import 'package:table_calendar/table_calendar.dart';
+// TableCalendar(
+//   firstDay: DateTime.utc(2020, 1, 1),
+//   lastDay: DateTime.utc(2032, 12, 31),
+//   focusedDay: DateTime.now(),
+// ),
+// import 'package:yumechanaccountbook/router.dart' as rt;
 import 'package:flutter/material.dart';
-import 'package:table_calendar/table_calendar.dart';
-
 import 'package:flutter/cupertino.dart';
-import 'package:yumechanaccountbook/router.dart' as rt;
+import 'package:flutter/services.dart';
 
 class HouseholdAccountInput extends StatefulWidget {
   const HouseholdAccountInput({Key? key}) : super(key: key);
@@ -12,194 +17,115 @@ class HouseholdAccountInput extends StatefulWidget {
   State<HouseholdAccountInput> createState() => _HouseholdAccountInputState();
 }
 
+class TagInfo {
+  TagInfo(
+    this.name,
+    this.id,
+  );
+  String name;
+  String id;
+}
+
 class _HouseholdAccountInputState extends State<HouseholdAccountInput> {
-  final moneyController = TextEditingController();
-  int _selectedRange = 1;
-  String _selectedString = "年";
+  TextEditingController moneyController = TextEditingController();
+  TextEditingController memoController = TextEditingController();
+  List<TagInfo> tagInfoList = [];
+
+  String tagText = '1 タグ 1';
+  @override
+  void initState() {
+    super.initState();
+    List<String> tempTagList = ['1', '2', '3', '4', '5', '6', '7'];
+    for (var item in tempTagList) {
+      tagInfoList.add(TagInfo('$item タグ $item', item));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // appBar: AppBar(
-      //   title: const Text('title'),
-      // ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('2022/6/20'),
-            Row(
-              children: [
-                TextField(controller: moneyController),
-                const Text('円'),
-              ],
+    return MediaQuery(
+      data: MediaQuery.of(context).copyWith(textScaleFactor: 1),
+      child: Scaffold(
+        appBar: AppBar(
+            // title: const Text('title'),
             ),
-            Row(
-              children: [
-                Text('タグ'),
-                CycleSelectButtons(
-                  selectedSpan: SpanExt.initFrom(_selectedString),
-                  range: _selectedRange,
-                  onSpanChanged: (value) {},
-                  onRangeChanged: (value) {
-                    print(value);
-                  },
-                ),
-              ],
-            )
-            // TableCalendar(
-            //   firstDay: DateTime.utc(2020, 1, 1),
-            //   lastDay: DateTime.utc(2032, 12, 31),
-            //   focusedDay: DateTime.now(),
-            // ),
-          ],
+        body: Container(
+          padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+          child: Column(
+            // mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              const Text('2022/6/20'),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: 100,
+                    child: TextField(
+                      controller: moneyController,
+                      textAlign: TextAlign.end,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    ),
+                  ),
+                  const Padding(
+                    padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                    child: Text('円'),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Text('収入・支出'),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('タグ'),
+                  BottomOfTheScreenDropdown(
+                    tagInfos: tagInfoList,
+                    selectedTagName: tagText,
+                    onChanged: (v) {
+                      tagText = v.toString();
+                      setState(() {});
+                    },
+                  ),
+                ],
+              ),
+              const Text('メモ内容'),
+              TextField(
+                controller: memoController,
+                // keyboardType: TextInputType.text,
+                keyboardType: TextInputType.multiline,
+                maxLines: 3,
+                maxLength: 200,
+              ),
+            ],
+          ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: const Icon(
-          Icons.done,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {},
+          child: const Icon(
+            Icons.done,
+          ),
         ),
       ),
     );
   }
 }
 
-class CycleSelectButtons extends StatelessWidget {
-  static final List<String> strings = [
-    Span.Year.stringValue,
-    Span.Month.stringValue,
-    Span.Day.stringValue,
-    Span.None.stringValue,
-  ];
-
-  static final List<String> yearStrings =
-      List<int>.generate(10, (i) => i + 1).map((i) => '$i').toList();
-  static final List<String> monthStrings =
-      List<int>.generate(12, (i) => i + 1).map((i) => '$i').toList();
-  static final List<String> dayStrings =
-      List<int>.generate(365, (i) => i + 1).map((i) => '$i').toList();
-
-  final Span selectedSpan;
-  final int range;
-  final ValueChanged<String> onSpanChanged;
-  final ValueChanged<int> onRangeChanged;
-
-  CycleSelectButtons(
-      {required this.selectedSpan,
-      required this.onSpanChanged,
-      required this.onRangeChanged,
-      required this.range});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: _dropdowns,
-      mainAxisAlignment: MainAxisAlignment.center,
-    );
-  }
-
-  List<Widget> get _dropdowns {
-    List<Widget> dropdowns = [
-      AdaptiveDropdown(
-        itemStrings: strings,
-        selectedItemString: selectedSpan.stringValue,
-        onChanged: (v) {},
-      ),
-    ];
-
-    if (selectedSpan == Span.None) {
-      return dropdowns;
-    } else {
-      switch (selectedSpan) {
-        case Span.Year:
-          dropdowns.add(
-            AdaptiveDropdown(
-              itemStrings: yearStrings,
-              selectedItemString: '$range',
-              onChanged: (value) => onRangeChanged(int.parse(value!)),
-            ),
-          );
-          break;
-        case Span.Month:
-          dropdowns.add(
-            AdaptiveDropdown(
-              itemStrings: monthStrings,
-              selectedItemString: '$range',
-              onChanged: (value) => onRangeChanged(int.parse(value!)),
-            ),
-          );
-          break;
-        case Span.Day:
-          dropdowns.add(
-            AdaptiveDropdown(
-              itemStrings: dayStrings,
-              selectedItemString: '$range',
-              onChanged: (value) => onRangeChanged(int.parse(value!)),
-            ),
-          );
-          break;
-        case Span.None:
-          break;
-      }
-      return dropdowns;
-    }
-  }
-}
-
-enum Span {
-  Year,
-  Month,
-  Day,
-  None,
-}
-
-extension SpanExt on Span {
-  static Span initFrom(String spanString) {
-    switch (spanString) {
-      case '年':
-        return Span.Year;
-        break;
-      case '月':
-        return Span.Month;
-        break;
-      case '日':
-        return Span.Day;
-        break;
-    }
-    return Span.None;
-  }
-
-  String get stringValue {
-    switch (this) {
-      case Span.Year:
-        return '年';
-        break;
-      case Span.Month:
-        return '月';
-        break;
-      case Span.Day:
-        return '日';
-        break;
-      case Span.None:
-        return '未設定';
-        break;
-    }
-    return "未設定";
-  }
-}
-
-class AdaptiveDropdown extends StatelessWidget {
-  final List<String> itemStrings;
-  final String selectedItemString;
+class BottomOfTheScreenDropdown extends StatelessWidget {
+  final List<TagInfo> tagInfos;
+  final String selectedTagName;
   final ValueChanged<String?> onChanged;
 
-  AdaptiveDropdown(
-      {required this.itemStrings,
-      required this.selectedItemString,
+  const BottomOfTheScreenDropdown(
+      {Key? key,
+      required this.tagInfos,
+      required this.selectedTagName,
       required this.onChanged})
-      : assert(itemStrings != null),
-        assert(selectedItemString != null),
-        assert(onChanged != null);
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -207,16 +133,14 @@ class AdaptiveDropdown extends StatelessWidget {
   }
 
   Widget _buildCupertinoPicker(BuildContext context) {
-    return Container(
-      child: Center(
-        child: CupertinoButton(
-          child: Text(
-            selectedItemString,
-            textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.blue),
-          ),
-          onPressed: () => _showModalPicker(context),
+    return Center(
+      child: CupertinoButton(
+        child: Text(
+          selectedTagName,
+          textAlign: TextAlign.center,
+          // style: TextStyle(color: Colors.blue),
         ),
+        onPressed: () => _showModalPicker(context),
       ),
     );
   }
@@ -225,7 +149,7 @@ class AdaptiveDropdown extends StatelessWidget {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
-        return Container(
+        return SizedBox(
           height: MediaQuery.of(context).size.height / 3,
           child: GestureDetector(
             onTap: () {
@@ -233,9 +157,9 @@ class AdaptiveDropdown extends StatelessWidget {
             },
             child: CupertinoPicker(
               itemExtent: 40,
-              children: itemStrings.map(_pickerItem).toList(),
+              children: tagInfos.map(_pickerItem).toList(),
               onSelectedItemChanged: (value) {
-                onChanged(itemStrings[value]);
+                onChanged(tagInfos[value].name);
               },
             ),
           ),
@@ -244,9 +168,11 @@ class AdaptiveDropdown extends StatelessWidget {
     );
   }
 
-  Widget _pickerItem(String string) {
-    return Text(
-      string,
+  Widget _pickerItem(TagInfo tag) {
+    return Center(
+      child: Text(
+        tag.name,
+      ),
     );
   }
 }
