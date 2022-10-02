@@ -54,7 +54,7 @@ class _HouseholdAccountInputState extends State<HouseholdAccountInput> {
           child: Column(
             // mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              const Text('2022/6/20'),
+              const Text('2022/10/1'),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
