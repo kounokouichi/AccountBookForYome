@@ -11,10 +11,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'SafeArea Sample',
-      theme: ThemeData(
-        primaryColor: Colors.white,
-      ),
       routes: {
         '/': (context) => const Menu(),
         rt.Router.householdAccountInput: (context) =>

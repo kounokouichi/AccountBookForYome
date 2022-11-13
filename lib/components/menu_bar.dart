@@ -9,8 +9,8 @@ class Menu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
       theme: ThemeData(
+        primaryColor: const Color(0xffffccf0),
         primarySwatch: Colors.blue,
       ),
       home: const MyStatefulWidget(),
