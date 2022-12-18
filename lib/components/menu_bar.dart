@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:yumechanaccountbook/view/household_account_confirm_by_moth.dart';
 
 import 'package:yumechanaccountbook/view/household_account_input.dart';
 import 'package:yumechanaccountbook/main2.dart';
@@ -28,7 +29,7 @@ class MyStatefulWidget extends StatefulWidget {
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   static const _screens = [
     HouseholdAccountInput(),
-    MyHomePage2(),
+    HouseholdAccountConfirmByMonth(),
     HouseholdAccountInput(),
     HouseholdAccountInput(),
   ];
@@ -36,7 +37,6 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   int _selectedIndex = 0;
 
   void _onItemTapped(int index) {
-    print('ONTAPED $index');
     setState(() {
       _selectedIndex = index;
     });
@@ -53,13 +53,13 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
           onPageChanged: _onItemTapped,
         ),
         bottomNavigationBar: BottomNavigationBar(
+          selectedItemColor: Theme.of(context).primaryColor,
           currentIndex: _selectedIndex,
           onTap: (index) {
             _pageViewController.animateToPage(index,
                 duration: Duration(milliseconds: 200), curve: Curves.easeOut);
           },
-          // onTap: _onItemTapped,
-          items: const <BottomNavigationBarItem>[
+          items: const [
             BottomNavigationBarItem(icon: Icon(Icons.edit_note), label: ''),
             BottomNavigationBarItem(
                 icon: Icon(Icons.calendar_month), label: ''),

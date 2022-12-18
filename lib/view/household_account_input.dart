@@ -1,14 +1,10 @@
 // import 'dart:io';
-// import 'package:table_calendar/table_calendar.dart';
-// TableCalendar(
-//   firstDay: DateTime.utc(2020, 1, 1),
-//   lastDay: DateTime.utc(2032, 12, 31),
-//   focusedDay: DateTime.now(),
-// ),
-// import 'package:yumechanaccountbook/router.dart' as rt;
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
+import 'package:yumechanaccountbook/common/colors.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 
 class HouseholdAccountInput extends StatefulWidget {
   const HouseholdAccountInput({Key? key}) : super(key: key);
@@ -30,7 +26,7 @@ class _HouseholdAccountInputState extends State<HouseholdAccountInput> {
   TextEditingController moneyController = TextEditingController();
   TextEditingController memoController = TextEditingController();
   List<TagInfo> tagInfoList = [];
-  String today = '';
+  DateTime today = DateTime.now();
   String selecedTagId = '';
 
   String tagText = '1 タグ 1';
@@ -38,7 +34,6 @@ class _HouseholdAccountInputState extends State<HouseholdAccountInput> {
   @override
   void initState() {
     super.initState();
-    today = '2022/10/01';
     List<String> tempTagList = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
     for (var item in tempTagList) {
       tagInfoList.add(TagInfo('$item タグ $item', item));
@@ -47,28 +42,58 @@ class _HouseholdAccountInputState extends State<HouseholdAccountInput> {
 
   @override
   Widget build(BuildContext context) {
+    DateFormat outputFormat = DateFormat('yyyy年MM月dd日');
     return Builder(builder: (context) {
       return MediaQuery(
         data: MediaQuery.of(context).copyWith(textScaleFactor: 1),
         child: Scaffold(
           appBar: AppBar(
-            backgroundColor: Theme.of(context).primaryColor,
+            toolbarHeight: 20,
+            backgroundColor: CommonColors.primaryColor,
             // title: const Text('title'),
           ),
           body: Container(
+            color: Colors.white,
             padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(today),
+                Align(
+                  alignment: Alignment.center,
+                  child: TextButton(
+                    child: Text(
+                      outputFormat.format(today),
+                      style: const TextStyle(
+                        color: CommonColors.black,
+                      ),
+                    ),
+                    onPressed: () {
+                      DatePicker.showDatePicker(
+                        context,
+                        showTitleActions: true,
+                        minTime: DateTime(1900, 1, 1),
+                        maxTime: DateTime(2049, 12, 31),
+                        onConfirm: (date) {
+                          setState(() {
+                            today = date;
+                          });
+                          // initData();
+                        },
+                        currentTime: today,
+                        locale: LocaleType.jp,
+                      );
+                    },
+                  ),
+                ),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     ToggleButtons(
                       borderRadius: const BorderRadius.all(Radius.circular(8)),
-                      selectedBorderColor: Colors.red[700],
+                      // selectedBorderColor: CommonColors.primaryColor,
                       selectedColor: Colors.white,
-                      fillColor: Colors.red[200],
-                      color: Colors.red[400],
+                      fillColor: CommonColors.primaryColor,
+                      color: CommonColors.primaryColor,
                       constraints: const BoxConstraints(
                         minHeight: 30.0,
                         minWidth: 60.0,
@@ -76,7 +101,6 @@ class _HouseholdAccountInputState extends State<HouseholdAccountInput> {
                       children: const [Text('収入'), Text('支出')],
                       isSelected: _selectedFruits,
                       onPressed: (int index) {
-                        print(Theme.of(context).primaryColor);
                         setState(() {
                           for (int i = 0; i < _selectedFruits.length; i++) {
                             _selectedFruits[i] = i == index;
@@ -84,8 +108,7 @@ class _HouseholdAccountInputState extends State<HouseholdAccountInput> {
                         });
                       },
                     ),
-                    SizedBox(
-                      width: 100,
+                    Expanded(
                       child: TextField(
                         controller: moneyController,
                         textAlign: TextAlign.end,
@@ -101,20 +124,26 @@ class _HouseholdAccountInputState extends State<HouseholdAccountInput> {
                     ),
                   ],
                 ),
+                const SizedBox(
+                  height: 10,
+                ),
                 SizedBox(
                   height: 30,
                   child: ListView.builder(
                     itemCount: tagInfoList.length,
                     scrollDirection: Axis.horizontal,
                     itemBuilder: (BuildContext context, int index) {
-                      return ChoiceChip(
-                        label: Text(tagInfoList[index].name),
-                        selected: tagInfoList[index].id == selecedTagId,
-                        onSelected: (selectedNum) {
-                          setState(() {
-                            selecedTagId = tagInfoList[index].id;
-                          });
-                        },
+                      return Container(
+                        margin: EdgeInsets.only(right: 5.0, left: 5.0),
+                        child: ChoiceChip(
+                          label: Text(tagInfoList[index].name),
+                          selected: tagInfoList[index].id == selecedTagId,
+                          onSelected: (selectedNum) {
+                            setState(() {
+                              selecedTagId = tagInfoList[index].id;
+                            });
+                          },
+                        ),
                       );
                     },
                   ),
@@ -122,12 +151,28 @@ class _HouseholdAccountInputState extends State<HouseholdAccountInput> {
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
-                    child: const Text('タグ編集'),
+                    child: const Text(
+                      'タグ編集',
+                      style: TextStyle(
+                        color: CommonColors.primaryColor,
+                      ),
+                    ),
                     onPressed: () {},
                   ),
                 ),
-                const Text('メモ'),
                 TextField(
+                  cursorColor: CommonColors.primaryColor,
+                  decoration: const InputDecoration(
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(
+                        color: CommonColors.primaryColor,
+                      ),
+                    ),
+                    labelText: 'メモ',
+                    floatingLabelStyle: TextStyle(
+                      color: CommonColors.primaryColor,
+                    ),
+                  ),
                   controller: memoController,
                   maxLength: 100,
                 ),
@@ -135,6 +180,7 @@ class _HouseholdAccountInputState extends State<HouseholdAccountInput> {
             ),
           ),
           floatingActionButton: FloatingActionButton(
+            backgroundColor: Theme.of(context).primaryColor,
             onPressed: () {},
             child: const Icon(
               Icons.done,
