@@ -1,4 +1,13 @@
 {
     "editor.formatOnSave": true,
-    "dart.flutterSdkPath": ".fvm/flutter_sdk"
+    "dart.flutterSdkPath": ".fvm/flutter_sdk",
+    "files.exclude": {
+        "**/.lockfile": true,
+        "**/.md": true
+    },
+    "search.exclude": {
+        "**/.lockfile": true,
+        "**/.md": true,
+        "LICENSE": true
+    }
 }

@@ -1,3 +1,4 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
@@ -41,11 +42,13 @@ class _HouseholdAccountConfirmByMonthState
               toolbarHeight: 20,
               backgroundColor: CommonColors.primaryColor,
             ),
-            body: Column(
-              children: [
-                ByMonthTableCalender(),
-                ByMonthTaggingMoney(),
-              ],
+            body: ProviderScope(
+              child: Column(
+                children: [
+                  ByMonthTableCalender(),
+                  ByMonthTaggingMoney(),
+                ],
+              ),
             )),
       );
     });

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:yumechanaccountbook/common/colors.dart';
+import 'package:yumechanaccountbook/view_model/by_month_table_calender_view_model.dart';
 
 class ByMonthTableCalender extends ConsumerStatefulWidget {
   const ByMonthTableCalender({Key? key}) : super(key: key);
@@ -20,14 +19,25 @@ class _ByMonthTableCellState extends ConsumerState<ByMonthTableCalender> {
     super.initState();
   }
 
+  ByMonthTableCalenderViewModel get _vm =>
+      ref.watch(byMonthTableCalenderProvider('id'));
+
   @override
   Widget build(BuildContext context) {
     return TableCalendar(
+      headerStyle: const HeaderStyle(
+        titleCentered: true,
+        formatButtonVisible: false,
+      ),
       locale: 'ja_JP',
       daysOfWeekHeight: 20,
-      firstDay: DateTime.utc(2010, 10, 16),
-      lastDay: DateTime.utc(2030, 3, 14),
-      focusedDay: DateTime.now(),
+      firstDay: DateTime.utc(2010, 1, 1),
+      lastDay: DateTime.utc(2030, 12, 31),
+      selectedDayPredicate: (day) {
+        return isSameDay(_vm.selectedDay, day);
+      },
+      focusedDay: _vm.focusedDay,
+      rowHeight: 40,
       calendarStyle: const CalendarStyle(
         todayDecoration: BoxDecoration(
           color: CommonColors.primaryColor,
@@ -37,8 +47,8 @@ class _ByMonthTableCellState extends ConsumerState<ByMonthTableCalender> {
         selectedTextStyle: TextStyle(color: CommonColors.primaryColor),
       ),
       onDaySelected: ((selectedDay, focusedDay) {
-        print(selectedDay);
-        print(focusedDay);
+        _vm.selectedDay = selectedDay;
+        _vm.setDayInfo(focusedDay);
       }),
     );
   }
