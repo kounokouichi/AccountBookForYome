@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:intl/intl.dart';
-import 'package:table_calendar/table_calendar.dart';
 import 'package:yumechanaccountbook/common/colors.dart';
 import 'package:yumechanaccountbook/view_model/by_month_table_calender_view_model.dart';
 
 class ByMonthTaggingMoney extends ConsumerStatefulWidget {
-  const ByMonthTaggingMoney({Key? key}) : super(key: key);
+  const ByMonthTaggingMoney({super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() {
@@ -19,6 +17,9 @@ class _ByMonthTaggingMoneyState extends ConsumerState<ByMonthTaggingMoney> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _vm.searchHouseHoldAccountBy();
+    });
   }
 
   ByMonthTableCalenderViewModel get _vm =>
@@ -30,29 +31,36 @@ class _ByMonthTaggingMoneyState extends ConsumerState<ByMonthTaggingMoney> {
       child: ListView.builder(
         itemCount: 3,
         itemBuilder: (BuildContext context, int index) {
-          return Container(
-            child: ExpansionTile(
-              textColor: CommonColors.black,
-              title: Text('${_vm.selectedDay}日の雑費: 20${_vm.selectedDay}円'),
-              children: [
-                ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: 2,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                      decoration: BoxDecoration(
-                          // color: Colors.blue,
-                          // border: Border.all(color: Colors.red),
-                          // borderRadius: BorderRadius.circular(10),
-                          ),
-                      padding: EdgeInsets.only(left: 20),
-                      height: 30,
-                      child: Text('ダイソー: 1011円'),
-                    );
-                  },
-                ),
-              ],
-            ),
+          return ExpansionTile(
+            textColor: CommonColors.black,
+            title: Text('${_vm.selectedDay}日の雑費: 20${_vm.selectedDay}円'),
+            children: [
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: 2,
+                itemBuilder: (BuildContext context, int index) {
+                  return Container(
+                    decoration: BoxDecoration(
+                        // color: Colors.blue,
+                        // border: Border.all(color: Colors.red),
+                        // borderRadius: BorderRadius.circular(10),
+                        ),
+                    padding: const EdgeInsets.only(left: 20),
+                    height: 30,
+                    child: Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            _vm.getHouseHoldAccount();
+                          },
+                          child: Text('ダイソー: 2022円'),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ],
           );
         },
       ),

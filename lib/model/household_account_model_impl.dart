@@ -1,12 +1,25 @@
 import 'package:sqflite/sqflite.dart';
-import 'package:yumechanaccountbook/data/household_account.dart';
+import 'package:yumechanaccountbook/model/household_account_model.dart';
 
-class HouseholdAccountModel {
+class HouseholdAccountModelImpl extends HouseholdAccountModel {
   static const String dbName = 'household_account';
 
-  static Future<void> createTables(Database database) async {}
+  @override
+  Future<void> createTables(Database database) async {
+    await database.execute("""
+        CREATE TABLE $dbName(
+          id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+          date TEXT NOT NULL,
+          money INTEGER NOT NULL,
+          income_or_expend_flag TEXT NOT NULL,
+          tag_id TEXT NOT NULL,
+          memo TEXT DEFAULT '',
+          stamp_id TEXT DEFAULT '0'
+        )
+      """);
+  }
 
-  static Future<Database> _db() async {
+  Future<Database> _db() async {
     return openDatabase(
       '$dbName.db',
       version: 1,
@@ -16,7 +29,7 @@ class HouseholdAccountModel {
     );
   }
 
-  static Future<int> createItem(
+  Future<int> createItem(
     String date,
     int money,
     MoneyType moneyType,
@@ -37,28 +50,21 @@ class HouseholdAccountModel {
     return id;
   }
 
-  // 家計簿テーブル取得（日付検索）
-  static Future<List<HouseholdAccount>> getByDateOf(String date) async {
+  Future<List<Map<String, dynamic>>> getNotes() async {
     final db = await _db();
-    final queryResult = await db.query(
-      dbName,
-      where: "date = ?",
-      whereArgs: [date],
-      orderBy: "id",
-    );
-    return HouseholdAccount.fromList(queryResult);
+    return db.query(dbName, orderBy: "id");
   }
 
-  // 家計簿テーブル全取得
-  static Future<List<HouseholdAccount>> getNotes() async {
-    final db = await _db();
-    final queryResult = await db.query(dbName, orderBy: "id");
-    return HouseholdAccount.fromList(queryResult);
-  }
-
-  static Future<List<Map<String, dynamic>>> getItem(int id) async {
+  @override
+  Future<List<Map<String, dynamic>>> getItem(int id) async {
     final db = await _db();
     return db.query('items', where: "id = ?", whereArgs: [id], limit: 1);
+  }
+
+  @override
+  static Future<List<Map<String, dynamic>>> getByDateOf(DateTime date) {
+    // TODO: implement getByDateOf
+    throw UnimplementedError();
   }
 
   // static Future<int> updateItem(

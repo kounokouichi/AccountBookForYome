@@ -5,7 +5,7 @@ import 'package:yumechanaccountbook/common/colors.dart';
 import 'package:yumechanaccountbook/view_model/by_month_table_calender_view_model.dart';
 
 class ByMonthTableCalender extends ConsumerStatefulWidget {
-  const ByMonthTableCalender({Key? key}) : super(key: key);
+  const ByMonthTableCalender({super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() {
@@ -32,7 +32,7 @@ class _ByMonthTableCellState extends ConsumerState<ByMonthTableCalender> {
       locale: 'ja_JP',
       daysOfWeekHeight: 20,
       firstDay: DateTime.utc(2010, 1, 1),
-      lastDay: DateTime.utc(2030, 12, 31),
+      lastDay: DateTime.utc(2040, 12, 31),
       selectedDayPredicate: (day) {
         return isSameDay(_vm.selectedDay, day);
       },
@@ -47,6 +47,7 @@ class _ByMonthTableCellState extends ConsumerState<ByMonthTableCalender> {
         selectedTextStyle: TextStyle(color: CommonColors.primaryColor),
       ),
       onDaySelected: ((selectedDay, focusedDay) {
+        _vm.getByDateOf(focusedDay);
         _vm.selectedDay = selectedDay;
         _vm.setDayInfo(focusedDay);
       }),
