@@ -9,7 +9,8 @@ class HouseholdAccount with _$HouseholdAccount {
     String date,
     int money,
     String incomeOrExpendFlag,
-    String tagId,
+    int tagId,
+    String tagName,
     String memo,
   ) = _HouseholdAccount;
 
@@ -18,12 +19,13 @@ class HouseholdAccount with _$HouseholdAccount {
     for (var item in data) {
       result.add(
         HouseholdAccount(
-          item['id'],
-          item['date'],
-          item['money'],
-          item['income_or_expend_flag'],
-          item['tag_id'],
-          item['memo'],
+          item['id'] ?? 0,
+          item['date'] ?? '',
+          item['money'] ?? 0,
+          item['income_or_expend_flag'] ?? '',
+          item['tag_id'] ?? 0,
+          item['name'] ?? '',
+          item['memo'] ?? '',
         ),
       );
     }

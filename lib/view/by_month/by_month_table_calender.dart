@@ -4,6 +4,7 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:yumechanaccountbook/common/colors.dart';
 import 'package:yumechanaccountbook/view_model/by_month_table_calender_view_model.dart';
 
+/// カレンダー画面
 class ByMonthTableCalender extends ConsumerStatefulWidget {
   const ByMonthTableCalender({super.key});
 
@@ -24,33 +25,49 @@ class _ByMonthTableCellState extends ConsumerState<ByMonthTableCalender> {
 
   @override
   Widget build(BuildContext context) {
-    return TableCalendar(
-      headerStyle: const HeaderStyle(
-        titleCentered: true,
-        formatButtonVisible: false,
-      ),
-      locale: 'ja_JP',
-      daysOfWeekHeight: 20,
-      firstDay: DateTime.utc(2010, 1, 1),
-      lastDay: DateTime.utc(2040, 12, 31),
-      selectedDayPredicate: (day) {
-        return isSameDay(_vm.selectedDay, day);
-      },
-      focusedDay: _vm.focusedDay,
-      rowHeight: 40,
-      calendarStyle: const CalendarStyle(
-        todayDecoration: BoxDecoration(
-          color: CommonColors.primaryColor,
-          shape: BoxShape.circle,
+    return Column(
+      children: [
+        // TODO:後で消す
+        TextButton(
+            onPressed: () {
+              _vm.registHouseHoldAccount();
+            },
+            child: Text('登録')),
+        // TODO:後で消す
+        TextButton(
+            onPressed: () {
+              _vm.getBytag();
+            },
+            child: Text('確認')),
+        TableCalendar(
+          headerStyle: const HeaderStyle(
+            titleCentered: true,
+            formatButtonVisible: false,
+          ),
+          locale: 'ja_JP',
+          daysOfWeekHeight: 20,
+          firstDay: DateTime.utc(2010, 1, 1),
+          lastDay: DateTime.utc(2040, 12, 31),
+          selectedDayPredicate: (day) {
+            return isSameDay(_vm.selectedDay, day);
+          },
+          focusedDay: _vm.focusedDay,
+          rowHeight: 40,
+          calendarStyle: const CalendarStyle(
+            todayDecoration: BoxDecoration(
+              color: CommonColors.primaryColor,
+              shape: BoxShape.circle,
+            ),
+            weekendTextStyle: TextStyle(color: Colors.red),
+            selectedTextStyle: TextStyle(color: CommonColors.primaryColor),
+          ),
+          onDaySelected: ((selectedDay, focusedDay) {
+            _vm.getByDateOf(focusedDay);
+            _vm.selectedDay = selectedDay;
+            _vm.setDayInfo(focusedDay);
+          }),
         ),
-        weekendTextStyle: TextStyle(color: Colors.red),
-        selectedTextStyle: TextStyle(color: CommonColors.primaryColor),
-      ),
-      onDaySelected: ((selectedDay, focusedDay) {
-        _vm.getByDateOf(focusedDay);
-        _vm.selectedDay = selectedDay;
-        _vm.setDayInfo(focusedDay);
-      }),
+      ],
     );
   }
 }

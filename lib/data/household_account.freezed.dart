@@ -20,7 +20,8 @@ mixin _$HouseholdAccount {
   String get date => throw _privateConstructorUsedError;
   int get money => throw _privateConstructorUsedError;
   String get incomeOrExpendFlag => throw _privateConstructorUsedError;
-  String get tagId => throw _privateConstructorUsedError;
+  int get tagId => throw _privateConstructorUsedError;
+  String get tagName => throw _privateConstructorUsedError;
   String get memo => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -39,7 +40,8 @@ abstract class $HouseholdAccountCopyWith<$Res> {
       String date,
       int money,
       String incomeOrExpendFlag,
-      String tagId,
+      int tagId,
+      String tagName,
       String memo});
 }
 
@@ -61,6 +63,7 @@ class _$HouseholdAccountCopyWithImpl<$Res, $Val extends HouseholdAccount>
     Object? money = null,
     Object? incomeOrExpendFlag = null,
     Object? tagId = null,
+    Object? tagName = null,
     Object? memo = null,
   }) {
     return _then(_value.copyWith(
@@ -83,6 +86,10 @@ class _$HouseholdAccountCopyWithImpl<$Res, $Val extends HouseholdAccount>
       tagId: null == tagId
           ? _value.tagId
           : tagId // ignore: cast_nullable_to_non_nullable
+              as int,
+      tagName: null == tagName
+          ? _value.tagName
+          : tagName // ignore: cast_nullable_to_non_nullable
               as String,
       memo: null == memo
           ? _value.memo
@@ -105,7 +112,8 @@ abstract class _$$_HouseholdAccountCopyWith<$Res>
       String date,
       int money,
       String incomeOrExpendFlag,
-      String tagId,
+      int tagId,
+      String tagName,
       String memo});
 }
 
@@ -125,6 +133,7 @@ class __$$_HouseholdAccountCopyWithImpl<$Res>
     Object? money = null,
     Object? incomeOrExpendFlag = null,
     Object? tagId = null,
+    Object? tagName = null,
     Object? memo = null,
   }) {
     return _then(_$_HouseholdAccount(
@@ -147,6 +156,10 @@ class __$$_HouseholdAccountCopyWithImpl<$Res>
       null == tagId
           ? _value.tagId
           : tagId // ignore: cast_nullable_to_non_nullable
+              as int,
+      null == tagName
+          ? _value.tagName
+          : tagName // ignore: cast_nullable_to_non_nullable
               as String,
       null == memo
           ? _value.memo
@@ -160,7 +173,7 @@ class __$$_HouseholdAccountCopyWithImpl<$Res>
 
 class _$_HouseholdAccount implements _HouseholdAccount {
   const _$_HouseholdAccount(this.id, this.date, this.money,
-      this.incomeOrExpendFlag, this.tagId, this.memo);
+      this.incomeOrExpendFlag, this.tagId, this.tagName, this.memo);
 
   @override
   final int id;
@@ -171,13 +184,15 @@ class _$_HouseholdAccount implements _HouseholdAccount {
   @override
   final String incomeOrExpendFlag;
   @override
-  final String tagId;
+  final int tagId;
+  @override
+  final String tagName;
   @override
   final String memo;
 
   @override
   String toString() {
-    return 'HouseholdAccount(id: $id, date: $date, money: $money, incomeOrExpendFlag: $incomeOrExpendFlag, tagId: $tagId, memo: $memo)';
+    return 'HouseholdAccount(id: $id, date: $date, money: $money, incomeOrExpendFlag: $incomeOrExpendFlag, tagId: $tagId, tagName: $tagName, memo: $memo)';
   }
 
   @override
@@ -191,12 +206,13 @@ class _$_HouseholdAccount implements _HouseholdAccount {
             (identical(other.incomeOrExpendFlag, incomeOrExpendFlag) ||
                 other.incomeOrExpendFlag == incomeOrExpendFlag) &&
             (identical(other.tagId, tagId) || other.tagId == tagId) &&
+            (identical(other.tagName, tagName) || other.tagName == tagName) &&
             (identical(other.memo, memo) || other.memo == memo));
   }
 
   @override
   int get hashCode => Object.hash(
-      runtimeType, id, date, money, incomeOrExpendFlag, tagId, memo);
+      runtimeType, id, date, money, incomeOrExpendFlag, tagId, tagName, memo);
 
   @JsonKey(ignore: true)
   @override
@@ -211,7 +227,8 @@ abstract class _HouseholdAccount implements HouseholdAccount {
       final String date,
       final int money,
       final String incomeOrExpendFlag,
-      final String tagId,
+      final int tagId,
+      final String tagName,
       final String memo) = _$_HouseholdAccount;
 
   @override
@@ -223,7 +240,9 @@ abstract class _HouseholdAccount implements HouseholdAccount {
   @override
   String get incomeOrExpendFlag;
   @override
-  String get tagId;
+  int get tagId;
+  @override
+  String get tagName;
   @override
   String get memo;
   @override

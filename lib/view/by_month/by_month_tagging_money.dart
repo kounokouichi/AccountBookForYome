@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yumechanaccountbook/common/colors.dart';
 import 'package:yumechanaccountbook/view_model/by_month_table_calender_view_model.dart';
 
+/// 選択されている日付のタグ毎の家計簿を表示する画面
 class ByMonthTaggingMoney extends ConsumerStatefulWidget {
   const ByMonthTaggingMoney({super.key});
 
@@ -29,16 +30,16 @@ class _ByMonthTaggingMoneyState extends ConsumerState<ByMonthTaggingMoney> {
   Widget build(BuildContext context) {
     return Expanded(
       child: ListView.builder(
-        itemCount: 3,
-        itemBuilder: (BuildContext context, int index) {
+        itemCount: _vm.houseHoldAccountTag.length,
+        itemBuilder: (BuildContext context, int i) {
           return ExpansionTile(
             textColor: CommonColors.black,
-            title: Text('${_vm.selectedDay}日の雑費: 20${_vm.selectedDay}円'),
+            title: Text(_vm.houseHoldAccountTag[i].tagName),
             children: [
               ListView.builder(
                 shrinkWrap: true,
-                itemCount: 2,
-                itemBuilder: (BuildContext context, int index) {
+                itemCount: _vm.infoLength(_vm.houseHoldAccountTag[i].tagId),
+                itemBuilder: (BuildContext context, int j) {
                   return Container(
                     decoration: BoxDecoration(
                         // color: Colors.blue,
@@ -49,11 +50,13 @@ class _ByMonthTaggingMoneyState extends ConsumerState<ByMonthTaggingMoney> {
                     height: 30,
                     child: Row(
                       children: [
-                        GestureDetector(
-                          onTap: () {
-                            _vm.getHouseHoldAccount();
-                          },
-                          child: Text('ダイソー: 2022円'),
+                        Expanded(
+                          flex: 4,
+                          child: Text(_vm.houseHoldAccountInfo[i].memo),
+                        ),
+                        Expanded(
+                          flex: 1,
+                          child: Text('${_vm.houseHoldAccountInfo[i].money}円'),
                         ),
                       ],
                     ),
