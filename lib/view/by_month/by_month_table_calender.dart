@@ -27,18 +27,6 @@ class _ByMonthTableCellState extends ConsumerState<ByMonthTableCalender> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // TODO:後で消す
-        TextButton(
-            onPressed: () {
-              _vm.registHouseHoldAccount();
-            },
-            child: Text('登録')),
-        // TODO:後で消す
-        TextButton(
-            onPressed: () {
-              _vm.getBytag();
-            },
-            child: Text('確認')),
         TableCalendar(
           headerStyle: const HeaderStyle(
             titleCentered: true,
@@ -62,9 +50,9 @@ class _ByMonthTableCellState extends ConsumerState<ByMonthTableCalender> {
             selectedTextStyle: TextStyle(color: CommonColors.primaryColor),
           ),
           onDaySelected: ((selectedDay, focusedDay) {
-            _vm.getByDateOf(focusedDay);
             _vm.selectedDay = selectedDay;
-            _vm.setDayInfo(focusedDay);
+            _vm.focusedDay = focusedDay;
+            _vm.getByDateOf();
           }),
         ),
       ],

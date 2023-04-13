@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:yumechanaccountbook/view/by_month/by_month_table_calender.dart';
 import 'package:yumechanaccountbook/view/by_month/by_month_tagging_money.dart';
+import 'package:yumechanaccountbook/view_model/by_month_table_calender_view_model.dart';
 
 // カレンダーからタグごとの金額が見える画面
 class HouseholdAccountConfirmByMonth extends ConsumerStatefulWidget {
@@ -14,9 +15,15 @@ class HouseholdAccountConfirmByMonth extends ConsumerStatefulWidget {
 
 class _HouseholdAccountConfirmByMonthState
     extends ConsumerState<HouseholdAccountConfirmByMonth> {
+  ByMonthTableCalenderViewModel get _vm =>
+      ref.watch(byMonthTableCalenderProvider('id'));
+
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _vm.getByDateOf();
+    });
   }
 
   @override

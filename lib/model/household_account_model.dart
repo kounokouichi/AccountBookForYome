@@ -11,7 +11,7 @@ class HouseholdAccountModel {
           date TEXT NOT NULL,
           money INTEGER NOT NULL DEFAULT '0',
           income_or_expend_flag TEXT NOT NULL DEFAULT '0',
-          tag_id TEXT NOT NULL,
+          tag_id INTEGER NOT NULL,
           memo TEXT DEFAULT '',
           stamp_id TEXT DEFAULT '0'
         )
@@ -27,7 +27,7 @@ class HouseholdAccountModel {
     await database
         .rawInsert('INSERT INTO tag(name, color, sort) VALUES("食費", null, 10)');
     await database
-        .rawInsert('INSERT INTO tag(name, color, sort) VALUES("雑費", null, 10)');
+        .rawInsert('INSERT INTO tag(name, color, sort) VALUES("雑費", null, 20)');
     await database.rawInsert(
         'INSERT INTO tag(name, color, sort) VALUES("外食費", null, 30)');
     // TODO:タグテーブルのレコードも作成
@@ -48,7 +48,7 @@ class HouseholdAccountModel {
     String date,
     int money,
     MoneyType moneyType,
-    String tagId,
+    int tagId,
     String memo,
   ) async {
     final db = await _db();
@@ -78,6 +78,7 @@ class HouseholdAccountModel {
           h.date like '$date%'
         order by h.id
       ''');
+    print('getByDateOf');
     print(queryResult);
 
     return HouseholdAccount.fromList(queryResult);
@@ -96,6 +97,7 @@ class HouseholdAccountModel {
           h.date like '$date%'
         order by h.id
       ''');
+    print('getTagByDateOf');
     print(queryResult);
 
     return HouseholdAccount.fromList(queryResult);

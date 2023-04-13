@@ -49,14 +49,15 @@ class _ByMonthTaggingMoneyState extends ConsumerState<ByMonthTaggingMoney> {
                     padding: const EdgeInsets.only(left: 20),
                     height: 30,
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         Expanded(
                           flex: 4,
-                          child: Text(_vm.houseHoldAccountInfo[i].memo),
+                          child: Text(_vm.houseHoldAccountInfo[j].memo),
                         ),
                         Expanded(
                           flex: 1,
-                          child: Text('${_vm.houseHoldAccountInfo[i].money}円'),
+                          child: Text('${_vm.houseHoldAccountInfo[j].money}円'),
                         ),
                       ],
                     ),

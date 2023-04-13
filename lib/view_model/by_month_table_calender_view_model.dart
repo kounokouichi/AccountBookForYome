@@ -30,22 +30,6 @@ class ByMonthTableCalenderViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// 家計簿の登録
-  void registHouseHoldAccount() async {
-    try {
-      await HouseholdAccountModel.createItem(
-        DateTime.now().toRegistrationString(),
-        1105,
-        MoneyType.expend,
-        '1',
-        'お肉お弁当「${DateTime.now().toRegistrationString()}」',
-      );
-      print(' create end');
-    } catch (e) {
-      print('登録失敗');
-    }
-  }
-
   /// 確認
   void getBytag() async {
     try {
@@ -70,14 +54,11 @@ class ByMonthTableCalenderViewModel extends ChangeNotifier {
   }
 
   // 日付毎に家計簿を検索し結果をタグ毎にまとめる
-  void getByDateOf(DateTime dateTime) async {
+  void getByDateOf() async {
     try {
-      final result = await HouseholdAccountModel.getByDateOf(
-        dateTime.toSearchString(),
-      );
-      final useingTag = await HouseholdAccountModel.getTagByDateOf(
-        dateTime.toSearchString(),
-      );
+      final day = focusedDay.toSearchString();
+      final result = await HouseholdAccountModel.getByDateOf(day);
+      final useingTag = await HouseholdAccountModel.getTagByDateOf(day);
       // タグ毎にリストを分ける必要がある
       _houseHoldAccountInfo = result;
       _houseHoldAccountTag = useingTag;
