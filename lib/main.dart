@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:yumechanaccountbook/view/edit_tag.dart';
 import 'package:yumechanaccountbook/view/household_account_input.dart';
 import 'package:yumechanaccountbook/components/menu_bar.dart';
 import 'router.dart' as rt;
@@ -18,8 +19,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       routes: {
         '/': (context) => const Menu(),
-        rt.Router.householdAccountInput: (context) =>
-            const HouseholdAccountInput(),
+        rt.Router.householdAccountInput: (context) => HouseholdAccountInput(
+              initDate: DateTime.now(),
+            ),
+        rt.Router.editTag: (context) => const EditTag(),
       },
     );
   }

@@ -1,5 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:yumechanaccountbook/data/household_account.dart';
+import 'package:yumechanaccountbook/data/tag/tag.dart';
 
 class HouseholdAccountModel {
   static const String dbName = 'household_account';
@@ -101,6 +102,20 @@ class HouseholdAccountModel {
     print(queryResult);
 
     return HouseholdAccount.fromList(queryResult);
+  }
+
+  // 家計簿テーブル取得（日付検索）
+  static Future<List<Tag>> getAllTag() async {
+    final db = await _db();
+    final queryResult = await db.rawQuery('''
+        select *
+        from
+           tag t
+        order by t.id
+      ''');
+    print('getAllTag');
+
+    return Tag.fromList(queryResult);
   }
 
   // テーブル取得（日付検索）

@@ -7,4 +7,5 @@ class Router {
   static String householdAccountInput = '/householdAccountInput';
   static String settings = '/settings';
   static String tagInput = '/tagInput';
+  static String editTag = '/editTag';
 }

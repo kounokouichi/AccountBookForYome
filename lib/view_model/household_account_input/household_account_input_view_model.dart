@@ -14,6 +14,7 @@ class HousehouldAccountInputViewModel extends ChangeNotifier {
   TextEditingController moneyController = TextEditingController();
   FocusNode moneyFocusNode = FocusNode();
   TextEditingController memoController = TextEditingController();
+  FocusNode memoFocusNode = FocusNode();
 
   int selecedTagId = 0;
   final List<Tag> _tagInfoList = [];
