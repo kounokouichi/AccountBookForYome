@@ -25,10 +25,15 @@ class _EditTagState extends ConsumerState<EditTag> {
     return MediaQuery(
       data: MediaQuery.of(context).copyWith(textScaleFactor: 1),
       child: Scaffold(
+        appBar: AppBar(),
         body: ListView.builder(
           itemCount: _vm.tagInfo.length,
           itemBuilder: (BuildContext context, int i) {
-            return Text('data');
+            return Dismissible(
+              key: Key(_vm.tagInfo[i].name),
+              child: ListTile(title: Text(_vm.tagInfo[i].name)),
+              onDismissed: (direction) {},
+            );
           },
         ),
       ),
