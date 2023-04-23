@@ -19,6 +19,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: const Color(0xffffccf0),
         primarySwatch: Colors.blue,
+        appBarTheme: const AppBarTheme(backgroundColor: Color(0xffffccf0)),
       ),
       routes: {
         '/': (context) => const HouseholdAccountConfirmByMonth(),

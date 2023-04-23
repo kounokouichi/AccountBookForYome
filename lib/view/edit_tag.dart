@@ -25,16 +25,32 @@ class _EditTagState extends ConsumerState<EditTag> {
     return MediaQuery(
       data: MediaQuery.of(context).copyWith(textScaleFactor: 1),
       child: Scaffold(
-        appBar: AppBar(),
+        appBar: AppBar(title: const Text('タグ編集')),
         body: ListView.builder(
           itemCount: _vm.tagInfo.length,
           itemBuilder: (BuildContext context, int i) {
             return Dismissible(
               key: Key(_vm.tagInfo[i].name),
               child: ListTile(title: Text(_vm.tagInfo[i].name)),
-              onDismissed: (direction) {},
+              direction: DismissDirection.endToStart,
+              background: Container(
+                alignment: Alignment.centerRight,
+                padding: const EdgeInsets.only(right: 10),
+                color: Colors.red,
+                child: const Icon(Icons.visibility_off),
+              ),
+              onDismissed: (direction) {
+                // TODO:非表示機能追加
+              },
             );
           },
+        ),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Theme.of(context).primaryColor,
+          onPressed: () {
+            // 登録機能追加
+          },
+          child: const Icon(Icons.add),
         ),
       ),
     );
