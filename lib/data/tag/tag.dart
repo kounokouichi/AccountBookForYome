@@ -9,6 +9,7 @@ class Tag with _$Tag {
     String name,
     String color,
     int sort,
+    bool invisible,
   ) = _Tag;
 
   static List<Tag> fromList(List<Map<String, dynamic>> data) {
@@ -20,6 +21,7 @@ class Tag with _$Tag {
           item['name'] ?? '',
           item['color'] ?? '',
           item['sort'] ?? 0,
+          item['invisible'] == 1,
         ),
       );
     }

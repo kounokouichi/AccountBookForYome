@@ -17,7 +17,7 @@ class HousehouldAccountInputViewModel extends ChangeNotifier {
   FocusNode memoFocusNode = FocusNode();
 
   int selecedTagId = 0;
-  final List<Tag> _tagInfoList = [];
+  late List<Tag> _tagInfoList = [];
   List<Tag> get tagInfoList => _tagInfoList;
   DateTime selectedDay = DateTime.now();
   DateFormat outputFormat = DateFormat('yyyy年MM月dd日');
@@ -40,10 +40,7 @@ class HousehouldAccountInputViewModel extends ChangeNotifier {
   }
 
   void searchTag() async {
-    // TODO:タグ全検索
-    _tagInfoList.add(Tag(0, '外食費', '', 10));
-    _tagInfoList.add(Tag(1, '食費', '', 20));
-    _tagInfoList.add(Tag(2, '雑費', '', 30));
+    _tagInfoList = await HouseholdAccountModel.getVisibleTag();
     notifyListeners();
   }
 

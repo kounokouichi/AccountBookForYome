@@ -13,13 +13,33 @@ class EditTagViewModel extends ChangeNotifier {
   // 日付毎に家計簿を検索し結果をタグ毎にまとめる
   void getAllTag() async {
     try {
-      final result = await HouseholdAccountModel.getAllTag();
-      // タグ毎にリストを分ける必要がある
+      final result = await HouseholdAccountModel.getVisibleTag();
       _tagInfo = result;
     } catch (e) {
       print(e);
       _tagInfo = [];
     }
     notifyListeners();
+  }
+
+  void insertTag() async {
+    try {
+      // 重複チェック
+      final checkTag = await HouseholdAccountModel.checkTagName('');
+      if (checkTag.isEmpty) {
+        // タグの挿入
+        HouseholdAccountModel.insertTag('');
+      } else if (checkTag.first.invisible) {
+        // タグの更新
+        HouseholdAccountModel.insertTag('');
+      } else {
+        // エラー
+      }
+
+      // 再読み込み
+      getAllTag();
+    } catch (e) {
+      print(e);
+    }
   }
 }

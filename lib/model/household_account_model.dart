@@ -22,7 +22,8 @@ class HouseholdAccountModel {
           id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
           name TEXT NOT NULL,
           color TEXT,
-          sort INTEGER NOT NULL
+          sort INTEGER NOT NULL,
+          invisible INTEGER 0
         )
       """);
     await database
@@ -105,17 +106,40 @@ class HouseholdAccountModel {
   }
 
   // 家計簿テーブル取得（日付検索）
-  static Future<List<Tag>> getAllTag() async {
+  static Future<List<Tag>> getAlalTag() async {
     final db = await _db();
     final queryResult = await db.rawQuery('''
-        select *
-        from
-           tag t
-        order by t.id
+        select * from tag t order by t.id
       ''');
     print('getAllTag');
 
     return Tag.fromList(queryResult);
+  }
+
+  // 家計簿テーブル取得（日付検索）
+  static Future<List<Tag>> getVisibleTag() async {
+    final db = await _db();
+    final queryResult = await db.rawQuery('''
+        select * from tag t where t.inVisible = 0 order by t.id
+      ''');
+    print('getAllTag');
+
+    return Tag.fromList(queryResult);
+  }
+
+  static Future<List<Tag>> checkTagName(String name) async {
+    final db = await _db();
+    final queryResult = await db.rawQuery('''
+        select distinct t.inVisible from tag t where t.name = $name
+      ''');
+    return Tag.fromList(queryResult);
+  }
+
+  static void insertTag(String name) async {
+    final db = await _db();
+    final queryResult = await db.rawQuery('''
+        select * from tag t where t.inVisible = 0 order by t.id
+      ''');
   }
 
   // テーブル取得（日付検索）

@@ -20,6 +20,7 @@ mixin _$Tag {
   String get name => throw _privateConstructorUsedError;
   String get color => throw _privateConstructorUsedError;
   int get sort => throw _privateConstructorUsedError;
+  bool get invisible => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $TagCopyWith<Tag> get copyWith => throw _privateConstructorUsedError;
@@ -30,7 +31,7 @@ abstract class $TagCopyWith<$Res> {
   factory $TagCopyWith(Tag value, $Res Function(Tag) then) =
       _$TagCopyWithImpl<$Res, Tag>;
   @useResult
-  $Res call({int id, String name, String color, int sort});
+  $Res call({int id, String name, String color, int sort, bool invisible});
 }
 
 /// @nodoc
@@ -49,6 +50,7 @@ class _$TagCopyWithImpl<$Res, $Val extends Tag> implements $TagCopyWith<$Res> {
     Object? name = null,
     Object? color = null,
     Object? sort = null,
+    Object? invisible = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -67,6 +69,10 @@ class _$TagCopyWithImpl<$Res, $Val extends Tag> implements $TagCopyWith<$Res> {
           ? _value.sort
           : sort // ignore: cast_nullable_to_non_nullable
               as int,
+      invisible: null == invisible
+          ? _value.invisible
+          : invisible // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -77,7 +83,7 @@ abstract class _$$_TagCopyWith<$Res> implements $TagCopyWith<$Res> {
       __$$_TagCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int id, String name, String color, int sort});
+  $Res call({int id, String name, String color, int sort, bool invisible});
 }
 
 /// @nodoc
@@ -93,6 +99,7 @@ class __$$_TagCopyWithImpl<$Res> extends _$TagCopyWithImpl<$Res, _$_Tag>
     Object? name = null,
     Object? color = null,
     Object? sort = null,
+    Object? invisible = null,
   }) {
     return _then(_$_Tag(
       null == id
@@ -111,6 +118,10 @@ class __$$_TagCopyWithImpl<$Res> extends _$TagCopyWithImpl<$Res, _$_Tag>
           ? _value.sort
           : sort // ignore: cast_nullable_to_non_nullable
               as int,
+      null == invisible
+          ? _value.invisible
+          : invisible // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -118,7 +129,7 @@ class __$$_TagCopyWithImpl<$Res> extends _$TagCopyWithImpl<$Res, _$_Tag>
 /// @nodoc
 
 class _$_Tag implements _Tag {
-  const _$_Tag(this.id, this.name, this.color, this.sort);
+  const _$_Tag(this.id, this.name, this.color, this.sort, this.invisible);
 
   @override
   final int id;
@@ -128,10 +139,12 @@ class _$_Tag implements _Tag {
   final String color;
   @override
   final int sort;
+  @override
+  final bool invisible;
 
   @override
   String toString() {
-    return 'Tag(id: $id, name: $name, color: $color, sort: $sort)';
+    return 'Tag(id: $id, name: $name, color: $color, sort: $sort, invisible: $invisible)';
   }
 
   @override
@@ -142,11 +155,14 @@ class _$_Tag implements _Tag {
             (identical(other.id, id) || other.id == id) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.color, color) || other.color == color) &&
-            (identical(other.sort, sort) || other.sort == sort));
+            (identical(other.sort, sort) || other.sort == sort) &&
+            (identical(other.invisible, invisible) ||
+                other.invisible == invisible));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, id, name, color, sort);
+  int get hashCode =>
+      Object.hash(runtimeType, id, name, color, sort, invisible);
 
   @JsonKey(ignore: true)
   @override
@@ -156,9 +172,8 @@ class _$_Tag implements _Tag {
 }
 
 abstract class _Tag implements Tag {
-  const factory _Tag(
-          final int id, final String name, final String color, final int sort) =
-      _$_Tag;
+  const factory _Tag(final int id, final String name, final String color,
+      final int sort, final bool invisible) = _$_Tag;
 
   @override
   int get id;
@@ -168,6 +183,8 @@ abstract class _Tag implements Tag {
   String get color;
   @override
   int get sort;
+  @override
+  bool get invisible;
   @override
   @JsonKey(ignore: true)
   _$$_TagCopyWith<_$_Tag> get copyWith => throw _privateConstructorUsedError;

@@ -37,10 +37,10 @@ class _EditTagState extends ConsumerState<EditTag> {
                 alignment: Alignment.centerRight,
                 padding: const EdgeInsets.only(right: 10),
                 color: Colors.red,
-                child: const Icon(Icons.visibility_off),
+                child: const Icon(Icons.delete),
               ),
               onDismissed: (direction) {
-                // TODO:非表示機能追加
+                // TODO:削除（フラグ寝かせ）機能追加
               },
             );
           },
@@ -49,6 +49,7 @@ class _EditTagState extends ConsumerState<EditTag> {
           backgroundColor: Theme.of(context).primaryColor,
           onPressed: () {
             // 登録機能追加
+            // 既にあるタグの時はフラグを起こす
           },
           child: const Icon(Icons.add),
         ),
