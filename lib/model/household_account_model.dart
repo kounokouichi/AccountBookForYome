@@ -137,9 +137,25 @@ class HouseholdAccountModel {
 
   static void insertTag(String name) async {
     final db = await _db();
+
     final queryResult = await db.rawQuery('''
-        select * from tag t where t.inVisible = 0 order by t.id
+        select distinct max(t.sort) from tag t 
       ''');
+    final result = Tag.fromList(queryResult);
+    var values = <String, dynamic>{
+      "name": name,
+      "color": null,
+      "sort": result.first.sort + 10,
+    };
+    await db.insert("tag", values);
+    print('insertTag');
+  }
+
+  static Future<void> updateTag(int id) async {
+    final db = await _db();
+    final data = {'inVisible': 0};
+    await db.update('tag', data, where: "id = ?", whereArgs: [id]);
+    print('updateTag');
   }
 
   // テーブル取得（日付検索）
@@ -163,21 +179,6 @@ class HouseholdAccountModel {
     final db = await _db();
     return db.query('items', where: "id = ?", whereArgs: [id], limit: 1);
   }
-
-  // static Future<int> updateItem(
-  //     int id, String title, String? descrption) async {
-  //   final db = await _db();
-
-  //   final data = {
-  //     'title': title,
-  //     'description': descrption,
-  //     'createdAt': DateTime.now().toString()
-  //   };
-
-  //   final result =
-  //       await db.update('items', data, where: "id = ?", whereArgs: [id]);
-  //   return result;
-  // }
 
   // static Future<void> deleteItem(int id) async {
   //   final db = await _db();
