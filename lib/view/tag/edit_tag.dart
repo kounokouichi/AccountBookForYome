@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:yumechanaccountbook/view/tag/edit_tag_create_dialog.dart';
 import 'package:yumechanaccountbook/view_model/edit_tag_view_model.dart';
 
 class EditTag extends ConsumerStatefulWidget {
@@ -40,7 +41,7 @@ class _EditTagState extends ConsumerState<EditTag> {
                 child: const Icon(Icons.delete),
               ),
               onDismissed: (direction) {
-                // TODO:削除（フラグ寝かせ）機能追加
+                _vm.deleteTag(_vm.tagInfo[i].id);
               },
             );
           },
@@ -48,12 +49,19 @@ class _EditTagState extends ConsumerState<EditTag> {
         floatingActionButton: FloatingActionButton(
           backgroundColor: Theme.of(context).primaryColor,
           onPressed: () {
-            // 登録機能追加
-            // 既にあるタグの時はフラグを起こす
+            _showDialog();
           },
           child: const Icon(Icons.add),
         ),
       ),
     );
+  }
+
+  Future<void> _showDialog() async {
+    showDialog(
+        context: context,
+        builder: (_) {
+          return const EditTagCreateDialog();
+        });
   }
 }

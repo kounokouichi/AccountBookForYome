@@ -85,10 +85,6 @@ class _HouseholdAccountInputState extends ConsumerState<HouseholdAccountInput> {
               // 収入・支出の選択
               ToggleButtons(
                 borderRadius: const BorderRadius.all(Radius.circular(8)),
-                // selectedBorderColor: CommonColors.primaryColor,
-                selectedColor: Colors.white,
-                fillColor: CommonColors.primaryColor,
-                color: CommonColors.primaryColor,
                 constraints: const BoxConstraints(
                   minHeight: 30.0,
                   minWidth: 60.0,
@@ -142,12 +138,7 @@ class _HouseholdAccountInputState extends ConsumerState<HouseholdAccountInput> {
           Align(
             alignment: Alignment.centerRight,
             child: TextButton(
-              child: const Text(
-                'タグ編集',
-                style: TextStyle(
-                  color: CommonColors.primaryColor,
-                ),
-              ),
+              child: const Text('タグ編集'),
               onPressed: () {
                 Navigator.of(context).pushNamed(rt.Router.editTag);
               },
@@ -155,18 +146,7 @@ class _HouseholdAccountInputState extends ConsumerState<HouseholdAccountInput> {
           ),
           // メモ入力欄
           TextField(
-            cursorColor: CommonColors.primaryColor,
-            decoration: const InputDecoration(
-              focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(
-                  color: CommonColors.primaryColor,
-                ),
-              ),
-              labelText: 'メモ',
-              floatingLabelStyle: TextStyle(
-                color: CommonColors.primaryColor,
-              ),
-            ),
+            decoration: const InputDecoration(labelText: 'メモ'),
             controller: _vm.memoController,
             focusNode: _vm.memoFocusNode,
             maxLength: 100,

@@ -1,6 +1,7 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:yumechanaccountbook/data/household_account.dart';
 import 'package:yumechanaccountbook/data/tag/tag.dart';
+import 'package:yumechanaccountbook/enum/bool_type.dart';
 
 class HouseholdAccountModel {
   static const String dbName = 'household_account';
@@ -151,9 +152,9 @@ class HouseholdAccountModel {
     print('insertTag');
   }
 
-  static Future<void> updateTag(int id) async {
+  static Future<void> updateTag(int id, IntBool bool) async {
     final db = await _db();
-    final data = {'inVisible': 0};
+    final data = {'inVisible': bool.value};
     await db.update('tag', data, where: "id = ?", whereArgs: [id]);
     print('updateTag');
   }

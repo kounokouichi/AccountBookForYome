@@ -47,7 +47,6 @@ class _ByMonthTableCellState extends ConsumerState<ByMonthTableCalender> {
               shape: BoxShape.circle,
             ),
             weekendTextStyle: TextStyle(color: Colors.red),
-            selectedTextStyle: TextStyle(color: CommonColors.primaryColor),
           ),
           onDaySelected: ((selectedDay, focusedDay) {
             _vm.selectedDay = selectedDay;
