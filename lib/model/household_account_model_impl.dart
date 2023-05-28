@@ -1,4 +1,5 @@
 import 'package:sqflite/sqflite.dart';
+import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
 import 'package:yumechanaccountbook/model/household_account_model.dart';
 
 class HouseholdAccountModelImpl extends HouseholdAccountModel {

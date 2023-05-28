@@ -33,16 +33,14 @@ class _HouseholdAccountConfirmByMonthState
       return MediaQuery(
         data: MediaQuery.of(context).copyWith(textScaleFactor: 1),
         child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.white,
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.settings),
-                color: Colors.black,
-                onPressed: () => {},
-              ),
-            ],
-          ),
+          // appBar: AppBar(
+          //   actions: [
+          //     IconButton(
+          //       icon: const Icon(Icons.settings),
+          //       onPressed: () => {},
+          //     ),
+          //   ],
+          // ),
           body: ProviderScope(
             child: Column(
               children: const [

@@ -75,4 +75,31 @@ class HousehouldAccountInputViewModel extends ChangeNotifier {
     }
     return;
   }
+
+  /// 家計簿の更新
+  void updateHouseHoldAccount(int accountId) async {
+    if (moneyController.text.isEmpty) {
+      message = Message.E0001;
+      return;
+    }
+
+    try {
+      MoneyType moneyType =
+          selectedMoneyType[0].toString() == MoneyType.income.value
+              ? MoneyType.income
+              : MoneyType.expend;
+
+      await HouseholdAccountModel.updateItem(
+        accountId.toString(),
+        selectedDay.toRegistrationString(),
+        int.parse(moneyController.text),
+        moneyType,
+        selecedTagId,
+        memoController.text,
+      );
+      message = Message.S0001;
+    } catch (e) {
+      message = Message.E0002;
+    }
+  }
 }

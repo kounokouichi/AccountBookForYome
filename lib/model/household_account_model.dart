@@ -47,6 +47,7 @@ class HouseholdAccountModel {
     );
   }
 
+  // 家計簿を作成
   static Future<int> createItem(
     String date,
     int money,
@@ -65,6 +66,46 @@ class HouseholdAccountModel {
     };
     final id = await db.insert(dbName, data,
         conflictAlgorithm: ConflictAlgorithm.replace);
+    return id;
+  }
+
+  // 家計簿を更新
+  static Future<int> updateItem(
+    String accountId,
+    String date,
+    int money,
+    MoneyType moneyType,
+    int tagId,
+    String memo,
+  ) async {
+    final db = await _db();
+
+    final data = {
+      'date': date,
+      'money': money,
+      'income_or_expend_flag': moneyType.value,
+      'tag_id': tagId,
+      'memo': memo,
+    };
+    final id = await db.update(
+      dbName,
+      data,
+      where: 'id = ?',
+      whereArgs: [accountId],
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
+    return id;
+  }
+
+  // 家計簿を更新
+  static Future<int> deleteItem(String accountId) async {
+    final db = await _db();
+
+    final id = await db.delete(
+      dbName,
+      where: 'id = ?',
+      whereArgs: [accountId.toString()],
+    );
     return id;
   }
 

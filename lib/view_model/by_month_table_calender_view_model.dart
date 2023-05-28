@@ -68,4 +68,14 @@ class ByMonthTableCalenderViewModel extends ChangeNotifier {
     }
     notifyListeners();
   }
+
+  // 家計簿を削除する
+  void deleteItemHouseHoldAccount(int accountId) async {
+    try {
+      await HouseholdAccountModel.deleteItem(accountId.toString());
+      // message = Message.S0001;
+    } catch (e) {
+      // message = Message.E0002;
+    }
+  }
 }
