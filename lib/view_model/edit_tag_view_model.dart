@@ -30,7 +30,8 @@ class EditTagViewModel extends ChangeNotifier {
   void insertTag() async {
     try {
       // 重複チェック
-      final checkTag = await HouseholdAccountModel.checkTagName('');
+      final checkTag =
+          await HouseholdAccountModel.checkTagName(tagController.text);
       if (checkTag.isEmpty) {
         // タグの挿入
         HouseholdAccountModel.insertTag(tagController.text);
@@ -48,6 +49,7 @@ class EditTagViewModel extends ChangeNotifier {
       print(e);
       message = Message.E0002;
     }
+    notifyListeners();
   }
 
   // タグを削除する

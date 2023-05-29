@@ -11,11 +11,11 @@ class HouseholdAccountModel {
         CREATE TABLE $dbName(
           id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
           date TEXT NOT NULL,
-          money INTEGER NOT NULL DEFAULT '0',
+          money INTEGER NOT NULL DEFAULT 0,
           income_or_expend_flag TEXT NOT NULL DEFAULT '0',
           tag_id INTEGER NOT NULL,
           memo TEXT DEFAULT '',
-          stamp_id TEXT DEFAULT '0'
+          stamp_id TEXT DEFAULT 0
         )
       """);
     await database.execute("""
@@ -24,7 +24,7 @@ class HouseholdAccountModel {
           name TEXT NOT NULL,
           color TEXT,
           sort INTEGER NOT NULL,
-          invisible INTEGER 0
+          invisible INTEGER DEFAULT 0
         )
       """);
     await database
@@ -172,7 +172,7 @@ class HouseholdAccountModel {
   static Future<List<Tag>> checkTagName(String name) async {
     final db = await _db();
     final queryResult = await db.rawQuery('''
-        select distinct t.inVisible from tag t where t.name = $name
+        select t.inVisible from tag t where t.name = '$name'
       ''');
     return Tag.fromList(queryResult);
   }

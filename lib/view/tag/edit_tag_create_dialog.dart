@@ -30,6 +30,9 @@ class _EditTagCreateDialogState extends ConsumerState<EditTagCreateDialog> {
             child: const Text('登録'),
             onPressed: () {
               _vm.insertTag();
+              if (_vm.message.isEmpty) {
+                Navigator.of(context).pop();
+              }
             },
           ),
         ),

@@ -35,22 +35,24 @@ class _ByMonthTaggingMoneyState extends ConsumerState<ByMonthTaggingMoney> {
         slivers: [
           SliverList(
             delegate: SliverChildBuilderDelegate(
-              childCount: 44,
+              // childCount: 44,
+              childCount: _vm.houseHoldAccountTag.length,
               (BuildContext context, int tagIndex) {
                 return ExpansionTile(
                   textColor: CommonColors.black,
-                  title: Text("_vm.houseHoldAccountTag[i].tagName"),
-                  // title: Text(_vm.houseHoldAccountTag[tagIndex].tagName),
+                  // title: Text("_vm.houseHoldAccountTag[i].tagName"),
+                  title: Text(_vm.houseHoldAccountTag[tagIndex].tagName),
                   children: [
                     ListView.builder(
                       shrinkWrap: true,
-                      itemCount: 3,
-                      // itemCount: _vm.infoLength(_vm.houseHoldAccountTag[i].tagId),
+                      // itemCount: 3,
+                      itemCount: _vm
+                          .infoLength(_vm.houseHoldAccountTag[tagIndex].tagId),
                       itemBuilder: (BuildContext context, int accountIndex) {
                         return Dismissible(
-                          key: Key(accountIndex.toString()),
-                          // key: Key(_vm.houseHoldAccountTag[accountIndex].id
-                          //     .toString()),
+                          // key: Key(accountIndex.toString()),
+                          key: Key(_vm.houseHoldAccountInfo[accountIndex].id
+                              .toString()),
                           background: Container(
                             alignment: Alignment.centerRight,
                             padding: const EdgeInsets.only(right: 10),
@@ -76,15 +78,17 @@ class _ByMonthTaggingMoneyState extends ConsumerState<ByMonthTaggingMoney> {
                                 children: [
                                   Expanded(
                                     flex: 4,
-                                    child: Text(
-                                        "_vm.houseHoldAccountInfo[j].memo"),
-                                    // child: Text(_vm.houseHoldAccountInfo[accountIndex].memo),
+                                    // child: Text( "_vm.houseHoldAccountInfo[j].memo"),
+                                    child: Text(_vm
+                                        .houseHoldAccountInfo[accountIndex]
+                                        .memo),
                                   ),
                                   // 金額
                                   Expanded(
                                     flex: 1,
-                                    child: Text('30398円'),
-                                    // child: Text('${_vm.houseHoldAccountInfo[accountIndex].money}円'),
+                                    // child: Text('30398円'),
+                                    child: Text(
+                                        '${_vm.houseHoldAccountInfo[accountIndex].money}円'),
                                   ),
                                 ],
                               ),

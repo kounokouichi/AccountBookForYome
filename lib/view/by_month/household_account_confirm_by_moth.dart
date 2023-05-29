@@ -41,12 +41,14 @@ class _HouseholdAccountConfirmByMonthState
           //     ),
           //   ],
           // ),
-          body: ProviderScope(
-            child: Column(
-              children: const [
-                ByMonthTableCalender(),
-                ByMonthTaggingMoney(),
-              ],
+          body: SafeArea(
+            child: ProviderScope(
+              child: Column(
+                children: const [
+                  ByMonthTableCalender(),
+                  ByMonthTaggingMoney(),
+                ],
+              ),
             ),
           ),
           // 登録ボタン
