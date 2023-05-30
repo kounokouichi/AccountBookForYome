@@ -21,7 +21,7 @@ class _ByMonthTableCellState extends ConsumerState<ByMonthTableCalender> {
   }
 
   ByMonthTableCalenderViewModel get _vm =>
-      ref.watch(byMonthTableCalenderProvider('id'));
+      ref.watch(byMonthTableCalenderProvider);
 
   @override
   Widget build(BuildContext context) {

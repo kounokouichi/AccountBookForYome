@@ -97,7 +97,7 @@ class HousehouldAccountInputViewModel extends ChangeNotifier {
         selecedTagId,
         memoController.text,
       );
-      message = Message.S0001;
+      message = Message.S0003;
     } catch (e) {
       message = Message.E0002;
     }

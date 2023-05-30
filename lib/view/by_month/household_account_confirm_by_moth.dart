@@ -17,7 +17,7 @@ class HouseholdAccountConfirmByMonth extends ConsumerStatefulWidget {
 class _HouseholdAccountConfirmByMonthState
     extends ConsumerState<HouseholdAccountConfirmByMonth> {
   ByMonthTableCalenderViewModel get _vm =>
-      ref.watch(byMonthTableCalenderProvider('id'));
+      ref.watch(byMonthTableCalenderProvider);
 
   @override
   void initState() {
@@ -33,14 +33,6 @@ class _HouseholdAccountConfirmByMonthState
       return MediaQuery(
         data: MediaQuery.of(context).copyWith(textScaleFactor: 1),
         child: Scaffold(
-          // appBar: AppBar(
-          //   actions: [
-          //     IconButton(
-          //       icon: const Icon(Icons.settings),
-          //       onPressed: () => {},
-          //     ),
-          //   ],
-          // ),
           body: SafeArea(
             child: ProviderScope(
               child: Column(

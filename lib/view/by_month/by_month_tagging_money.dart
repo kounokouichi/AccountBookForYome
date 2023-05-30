@@ -17,16 +17,8 @@ class ByMonthTaggingMoney extends ConsumerStatefulWidget {
 }
 
 class _ByMonthTaggingMoneyState extends ConsumerState<ByMonthTaggingMoney> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _vm.searchHouseHoldAccountBy();
-    });
-  }
-
   ByMonthTableCalenderViewModel get _vm =>
-      ref.watch(byMonthTableCalenderProvider('id'));
+      ref.watch(byMonthTableCalenderProvider);
 
   @override
   Widget build(BuildContext context) {
@@ -35,66 +27,19 @@ class _ByMonthTaggingMoneyState extends ConsumerState<ByMonthTaggingMoney> {
         slivers: [
           SliverList(
             delegate: SliverChildBuilderDelegate(
-              // childCount: 44,
               childCount: _vm.houseHoldAccountTag.length,
               (BuildContext context, int tagIndex) {
                 return ExpansionTile(
                   textColor: CommonColors.black,
-                  // title: Text("_vm.houseHoldAccountTag[i].tagName"),
+                  // タグ名
                   title: Text(_vm.houseHoldAccountTag[tagIndex].tagName),
                   children: [
                     ListView.builder(
                       shrinkWrap: true,
-                      // itemCount: 3,
                       itemCount: _vm
                           .infoLength(_vm.houseHoldAccountTag[tagIndex].tagId),
                       itemBuilder: (BuildContext context, int accountIndex) {
-                        return Dismissible(
-                          // key: Key(accountIndex.toString()),
-                          key: Key(_vm.houseHoldAccountInfo[accountIndex].id
-                              .toString()),
-                          background: Container(
-                            alignment: Alignment.centerRight,
-                            padding: const EdgeInsets.only(right: 10),
-                            color: Colors.red,
-                            child: const Icon(Icons.delete),
-                          ),
-                          onDismissed: (_) {
-                            _vm.deleteItemHouseHoldAccount(
-                                _vm.houseHoldAccountInfo[accountIndex].id);
-                          },
-                          child: GestureDetector(
-                            onTap: () {
-                              if (_vm.houseHoldAccountInfo.isEmpty) return;
-                              _showModalPicker(
-                                  _vm.houseHoldAccountInfo[accountIndex]);
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.only(left: 20),
-                              height: 30,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  Expanded(
-                                    flex: 4,
-                                    // child: Text( "_vm.houseHoldAccountInfo[j].memo"),
-                                    child: Text(_vm
-                                        .houseHoldAccountInfo[accountIndex]
-                                        .memo),
-                                  ),
-                                  // 金額
-                                  Expanded(
-                                    flex: 1,
-                                    // child: Text('30398円'),
-                                    child: Text(
-                                        '${_vm.houseHoldAccountInfo[accountIndex].money}円'),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
+                        return _contentByTag(accountIndex);
                       },
                     ),
                   ],
@@ -103,6 +48,47 @@ class _ByMonthTaggingMoneyState extends ConsumerState<ByMonthTaggingMoney> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _contentByTag(int accountIndex) {
+    return Dismissible(
+      key: Key(_vm.houseHoldAccountInfo[accountIndex].id.toString()),
+      background: Container(
+        alignment: Alignment.centerRight,
+        padding: const EdgeInsets.only(right: 10),
+        color: Colors.red,
+        child: const Icon(Icons.delete),
+      ),
+      onDismissed: (_) {
+        _vm.deleteItemHouseHoldAccount(
+            _vm.houseHoldAccountInfo[accountIndex].id);
+      },
+      child: GestureDetector(
+        onTap: () {
+          if (_vm.houseHoldAccountInfo.isEmpty) return;
+          _showModalPicker(_vm.houseHoldAccountInfo[accountIndex]);
+        },
+        child: Container(
+          padding: const EdgeInsets.only(left: 20),
+          height: 32,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              // メモ
+              Expanded(
+                flex: 4,
+                child: Text(_vm.houseHoldAccountInfo[accountIndex].memo),
+              ),
+              // 金額
+              Expanded(
+                flex: 1,
+                child: Text('${_vm.houseHoldAccountInfo[accountIndex].money}円'),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
