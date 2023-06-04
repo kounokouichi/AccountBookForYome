@@ -1,4 +1,8 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
 import 'package:yumechanaccountbook/data/household_account.dart';
 import 'package:yumechanaccountbook/data/tag/tag.dart';
 import 'package:yumechanaccountbook/enum/bool_type.dart';
@@ -27,19 +31,26 @@ class HouseholdAccountModel {
           invisible INTEGER DEFAULT 0
         )
       """);
-    await database
-        .rawInsert('INSERT INTO tag(name, color, sort) VALUES("食費", null, 10)');
-    await database
-        .rawInsert('INSERT INTO tag(name, color, sort) VALUES("雑費", null, 20)');
-    await database.rawInsert(
-        'INSERT INTO tag(name, color, sort) VALUES("外食費", null, 30)');
-    // TODO:タグテーブルのレコードも作成
+    if (!kIsWeb) {
+      // webやと通ってくれない
+      await database.rawInsert(
+          'INSERT INTO tag(name, color, sort) VALUES("食費", null, 10)');
+      await database.rawInsert(
+          'INSERT INTO tag(name, color, sort) VALUES("雑費", null, 20)');
+      await database.rawInsert(
+          'INSERT INTO tag(name, color, sort) VALUES("外食費", null, 30)');
+    }
   }
 
   static Future<Database> _db() async {
-    // TODO:ここらへんにいい感じにtagテーブルを追加
+    String path = '$dbName.db';
+    if (kIsWeb) {
+      // 名前変えてる必要あんましなくない？
+      path = '${dbName}_web.db';
+      databaseFactory = databaseFactoryFfiWeb;
+    }
     return openDatabase(
-      '$dbName.db',
+      path,
       version: 1,
       onCreate: (Database database, int version) async {
         await createTables(database);
@@ -122,8 +133,7 @@ class HouseholdAccountModel {
           h.date like '$date%'
         order by h.id
       ''');
-    print('getByDateOf');
-    print(queryResult);
+    print('getByDateOf ¥n$queryResult');
 
     return HouseholdAccount.fromList(queryResult);
   }
@@ -141,8 +151,7 @@ class HouseholdAccountModel {
           h.date like '$date%'
         order by h.id
       ''');
-    print('getTagByDateOf');
-    print(queryResult);
+    print('getTagByDateOf ¥n$queryResult');
 
     return HouseholdAccount.fromList(queryResult);
   }
@@ -153,7 +162,7 @@ class HouseholdAccountModel {
     final queryResult = await db.rawQuery('''
         select * from tag t order by t.id
       ''');
-    print('getAllTag');
+    print('getAllTag ¥n$queryResult');
 
     return Tag.fromList(queryResult);
   }
@@ -164,7 +173,7 @@ class HouseholdAccountModel {
     final queryResult = await db.rawQuery('''
         select * from tag t where t.inVisible = 0 order by t.id
       ''');
-    print('getAllTag');
+    print('getAllTag ¥n$queryResult');
 
     return Tag.fromList(queryResult);
   }

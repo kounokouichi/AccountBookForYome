@@ -7,6 +7,7 @@ class HouseholdAccountModelImpl extends HouseholdAccountModel {
 
   @override
   Future<void> createTables(Database database) async {
+    databaseFactory = databaseFactoryFfiWeb;
     await database.execute("""
         CREATE TABLE $dbName(
           id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
@@ -21,6 +22,7 @@ class HouseholdAccountModelImpl extends HouseholdAccountModel {
   }
 
   Future<Database> _db() async {
+    databaseFactory = databaseFactoryFfiWeb;
     return openDatabase(
       '$dbName.db',
       version: 1,
