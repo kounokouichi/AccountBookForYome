@@ -5,12 +5,20 @@ import 'package:flutter/services.dart';
 import 'package:yumechanaccountbook/common/colors.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:yumechanaccountbook/common/common.dart';
+import 'package:yumechanaccountbook/common/string_extension.dart';
+import 'package:yumechanaccountbook/data/household_account.dart';
 import 'package:yumechanaccountbook/router.dart' as rt;
 import 'package:yumechanaccountbook/view_model/household_account_input/household_account_input_view_model.dart';
 
 class HouseholdAccountInput extends ConsumerStatefulWidget {
+  // カレンダー内の選択してる日付
   final DateTime initDate;
-  const HouseholdAccountInput({super.key, required this.initDate});
+  final HouseholdAccount? selectingAccountInfo;
+  const HouseholdAccountInput({
+    super.key,
+    required this.initDate,
+    this.selectingAccountInfo,
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -25,7 +33,18 @@ class _HouseholdAccountInputState extends ConsumerState<HouseholdAccountInput> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _vm.selectedDay = widget.initDate;
+      if (widget.selectingAccountInfo == null) {
+        // 登録時
+        _vm.selectedDay = widget.initDate;
+      } else {
+        // 更新時
+        _vm.selectedDay =
+            widget.selectingAccountInfo!.date.toDateTimeUpToSeconds();
+        _vm.moneyController.text =
+            widget.selectingAccountInfo!.money.toString();
+        _vm.memoController.text = widget.selectingAccountInfo!.memo;
+        _vm.selectMoneyType(widget.selectingAccountInfo!.incomeOrExpendFlag);
+      }
       _vm.searchTag();
     });
   }
@@ -48,9 +67,16 @@ class _HouseholdAccountInputState extends ConsumerState<HouseholdAccountInput> {
               ),
               TextButton(
                 onPressed: () {
-                  _vm.registHouseHoldAccount();
+                  if (widget.selectingAccountInfo == null) {
+                    _vm.registHouseHoldAccount();
+                    _showSnackBar();
+                  } else {
+                    _vm.updateHouseHoldAccount(widget.selectingAccountInfo!.id);
+                    _showSnackBar();
+                    Navigator.of(context).pop();
+                  }
                 },
-                child: Text('登録'),
+                child: Text(widget.selectingAccountInfo == null ? '登録' : '更新'),
               ),
             ],
           ),
@@ -85,10 +111,6 @@ class _HouseholdAccountInputState extends ConsumerState<HouseholdAccountInput> {
               // 収入・支出の選択
               ToggleButtons(
                 borderRadius: const BorderRadius.all(Radius.circular(8)),
-                // selectedBorderColor: CommonColors.primaryColor,
-                selectedColor: Colors.white,
-                fillColor: CommonColors.primaryColor,
-                color: CommonColors.primaryColor,
                 constraints: const BoxConstraints(
                   minHeight: 30.0,
                   minWidth: 60.0,
@@ -142,12 +164,7 @@ class _HouseholdAccountInputState extends ConsumerState<HouseholdAccountInput> {
           Align(
             alignment: Alignment.centerRight,
             child: TextButton(
-              child: const Text(
-                'タグ編集',
-                style: TextStyle(
-                  color: CommonColors.primaryColor,
-                ),
-              ),
+              child: const Text('タグ編集'),
               onPressed: () {
                 Navigator.of(context).pushNamed(rt.Router.editTag);
               },
@@ -155,18 +172,7 @@ class _HouseholdAccountInputState extends ConsumerState<HouseholdAccountInput> {
           ),
           // メモ入力欄
           TextField(
-            cursorColor: CommonColors.primaryColor,
-            decoration: const InputDecoration(
-              focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(
-                  color: CommonColors.primaryColor,
-                ),
-              ),
-              labelText: 'メモ',
-              floatingLabelStyle: TextStyle(
-                color: CommonColors.primaryColor,
-              ),
-            ),
+            decoration: const InputDecoration(labelText: 'メモ'),
             controller: _vm.memoController,
             focusNode: _vm.memoFocusNode,
             maxLength: 100,

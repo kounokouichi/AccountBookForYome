@@ -17,7 +17,7 @@ class HouseholdAccountConfirmByMonth extends ConsumerStatefulWidget {
 class _HouseholdAccountConfirmByMonthState
     extends ConsumerState<HouseholdAccountConfirmByMonth> {
   ByMonthTableCalenderViewModel get _vm =>
-      ref.watch(byMonthTableCalenderProvider('id'));
+      ref.watch(byMonthTableCalenderProvider);
 
   @override
   void initState() {
@@ -33,22 +33,14 @@ class _HouseholdAccountConfirmByMonthState
       return MediaQuery(
         data: MediaQuery.of(context).copyWith(textScaleFactor: 1),
         child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.white,
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.settings),
-                color: Colors.black,
-                onPressed: () => {},
+          body: SafeArea(
+            child: ProviderScope(
+              child: Column(
+                children: const [
+                  ByMonthTableCalender(),
+                  ByMonthTaggingMoney(),
+                ],
               ),
-            ],
-          ),
-          body: ProviderScope(
-            child: Column(
-              children: const [
-                ByMonthTableCalender(),
-                ByMonthTaggingMoney(),
-              ],
             ),
           ),
           // 登録ボタン

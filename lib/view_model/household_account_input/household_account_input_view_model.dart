@@ -5,6 +5,7 @@ import 'package:yumechanaccountbook/common/date_time_extension.dart';
 import 'package:yumechanaccountbook/common/message.dart';
 import 'package:yumechanaccountbook/data/tag/tag.dart';
 import 'package:yumechanaccountbook/model/household_account_model.dart';
+import 'package:yumechanaccountbook/model/tag_model.dart';
 
 final househouldAccountInputProvider = ChangeNotifierProvider.autoDispose
     .family<HousehouldAccountInputViewModel, String>(
@@ -40,7 +41,7 @@ class HousehouldAccountInputViewModel extends ChangeNotifier {
   }
 
   void searchTag() async {
-    _tagInfoList = await HouseholdAccountModel.getVisibleTag();
+    _tagInfoList = await TagModel.getVisibleTag();
     notifyListeners();
   }
 
@@ -74,5 +75,32 @@ class HousehouldAccountInputViewModel extends ChangeNotifier {
       message = Message.E0002;
     }
     return;
+  }
+
+  /// 家計簿の更新
+  void updateHouseHoldAccount(int accountId) async {
+    if (moneyController.text.isEmpty) {
+      message = Message.E0001;
+      return;
+    }
+
+    try {
+      MoneyType moneyType =
+          selectedMoneyType[0].toString() == MoneyType.income.value
+              ? MoneyType.income
+              : MoneyType.expend;
+
+      await HouseholdAccountModel.updateItem(
+        accountId.toString(),
+        selectedDay.toRegistrationString(),
+        int.parse(moneyController.text),
+        moneyType,
+        selecedTagId,
+        memoController.text,
+      );
+      message = Message.S0003;
+    } catch (e) {
+      message = Message.E0002;
+    }
   }
 }

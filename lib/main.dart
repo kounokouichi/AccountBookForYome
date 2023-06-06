@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:yumechanaccountbook/view/by_month/household_account_confirm_by_moth.dart';
-import 'package:yumechanaccountbook/view/edit_tag.dart';
+import 'package:yumechanaccountbook/view/tag/edit_tag.dart';
 import 'router.dart' as rt;
 import 'package:intl/date_symbol_data_local.dart';
 
@@ -17,9 +17,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
+        useMaterial3: true,
         primaryColor: const Color(0xffffccf0),
-        primarySwatch: Colors.blue,
-        appBarTheme: const AppBarTheme(backgroundColor: Color(0xffffccf0)),
+        // primarySwatch: Colors.blue,
+        // appBarTheme: const AppBarTheme(backgroundColor: Color(0xffffccf0)),
       ),
       routes: {
         '/': (context) => const HouseholdAccountConfirmByMonth(),
