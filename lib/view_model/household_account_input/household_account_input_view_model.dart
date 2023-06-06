@@ -5,6 +5,7 @@ import 'package:yumechanaccountbook/common/date_time_extension.dart';
 import 'package:yumechanaccountbook/common/message.dart';
 import 'package:yumechanaccountbook/data/tag/tag.dart';
 import 'package:yumechanaccountbook/model/household_account_model.dart';
+import 'package:yumechanaccountbook/model/tag_model.dart';
 
 final househouldAccountInputProvider = ChangeNotifierProvider.autoDispose
     .family<HousehouldAccountInputViewModel, String>(
@@ -40,7 +41,7 @@ class HousehouldAccountInputViewModel extends ChangeNotifier {
   }
 
   void searchTag() async {
-    _tagInfoList = await HouseholdAccountModel.getVisibleTag();
+    _tagInfoList = await TagModel.getVisibleTag();
     notifyListeners();
   }
 

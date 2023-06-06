@@ -28,11 +28,9 @@ class _EditTagCreateDialogState extends ConsumerState<EditTagCreateDialog> {
           alignment: Alignment.centerRight,
           child: TextButton(
             child: const Text('登録'),
-            onPressed: () {
-              _vm.insertTag();
-              if (_vm.message.isEmpty) {
-                Navigator.of(context).pop();
-              }
+            onPressed: () async {
+              await _vm.insertTag();
+              Navigator.of(context).pop(true);
             },
           ),
         ),

@@ -1,64 +1,9 @@
-import 'dart:io';
-
-import 'package:flutter/foundation.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
 import 'package:yumechanaccountbook/data/household_account.dart';
-import 'package:yumechanaccountbook/data/tag/tag.dart';
-import 'package:yumechanaccountbook/enum/bool_type.dart';
+import 'package:yumechanaccountbook/model/common_model.dart';
 
 class HouseholdAccountModel {
-  static const String dbName = 'household_account';
-
-  static Future<void> createTables(Database database) async {
-    await database.execute("""
-        CREATE TABLE $dbName(
-          id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-          date TEXT NOT NULL,
-          money INTEGER NOT NULL DEFAULT 0,
-          income_or_expend_flag TEXT NOT NULL DEFAULT '0',
-          tag_id INTEGER NOT NULL,
-          memo TEXT DEFAULT '',
-          stamp_id TEXT DEFAULT 0
-        )
-      """);
-    await database.execute("""
-        CREATE TABLE tag(
-          id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-          name TEXT NOT NULL,
-          color TEXT,
-          sort INTEGER NOT NULL,
-          invisible INTEGER DEFAULT 0
-        )
-      """);
-    if (!kIsWeb) {
-      // webやと通ってくれない
-      await database.rawInsert(
-          'INSERT INTO tag(name, color, sort) VALUES("食費", null, 10)');
-      await database.rawInsert(
-          'INSERT INTO tag(name, color, sort) VALUES("雑費", null, 20)');
-      await database.rawInsert(
-          'INSERT INTO tag(name, color, sort) VALUES("外食費", null, 30)');
-    }
-  }
-
-  static Future<Database> _db() async {
-    String path = '$dbName.db';
-    if (kIsWeb) {
-      // 名前変えてる必要あんましなくない？
-      path = '${dbName}_web.db';
-      databaseFactory = databaseFactoryFfiWeb;
-    }
-    return openDatabase(
-      path,
-      version: 1,
-      onCreate: (Database database, int version) async {
-        await createTables(database);
-      },
-    );
-  }
-
-  // 家計簿を作成
+  /// 家計簿を作成する
   static Future<int> createItem(
     String date,
     int money,
@@ -66,7 +11,7 @@ class HouseholdAccountModel {
     int tagId,
     String memo,
   ) async {
-    final db = await _db();
+    final db = await CommonModel.db();
 
     final data = {
       'date': date,
@@ -75,12 +20,15 @@ class HouseholdAccountModel {
       'tag_id': tagId,
       'memo': memo,
     };
-    final id = await db.insert(dbName, data,
-        conflictAlgorithm: ConflictAlgorithm.replace);
+    final id = await db.insert(
+      CommonModel.tableNameHouseHoldAccount,
+      data,
+      conflictAlgorithm: ConflictAlgorithm.replace,
+    );
     return id;
   }
 
-  // 家計簿を更新
+  /// 家計簿を更新する
   static Future<int> updateItem(
     String accountId,
     String date,
@@ -89,7 +37,7 @@ class HouseholdAccountModel {
     int tagId,
     String memo,
   ) async {
-    final db = await _db();
+    final db = await CommonModel.db();
 
     final data = {
       'date': date,
@@ -99,7 +47,7 @@ class HouseholdAccountModel {
       'memo': memo,
     };
     final id = await db.update(
-      dbName,
+      CommonModel.tableNameHouseHoldAccount,
       data,
       where: 'id = ?',
       whereArgs: [accountId],
@@ -108,26 +56,26 @@ class HouseholdAccountModel {
     return id;
   }
 
-  // 家計簿を更新
+  /// 家計簿を削除する
   static Future<int> deleteItem(String accountId) async {
-    final db = await _db();
+    final db = await CommonModel.db();
 
     final id = await db.delete(
-      dbName,
+      CommonModel.tableNameHouseHoldAccount,
       where: 'id = ?',
       whereArgs: [accountId.toString()],
     );
     return id;
   }
 
-  // 家計簿テーブル取得（日付検索）
+  /// 家計簿テーブル取得（日付検索）
   static Future<List<HouseholdAccount>> getByDateOf(String date) async {
-    final db = await _db();
+    final db = await CommonModel.db();
     final queryResult = await db.rawQuery('''
         select * 
         from
-           $dbName h
-           inner join tag t
+           ${CommonModel.tableNameHouseHoldAccount} h
+           inner join ${CommonModel.tableNameTag} t
            on h.tag_id = t.id
         where
           h.date like '$date%'
@@ -138,14 +86,14 @@ class HouseholdAccountModel {
     return HouseholdAccount.fromList(queryResult);
   }
 
-  // 家計簿テーブル取得（日付検索）
+  /// 家計簿テーブル取得（日付検索）
   static Future<List<HouseholdAccount>> getTagByDateOf(String date) async {
-    final db = await _db();
+    final db = await CommonModel.db();
     final queryResult = await db.rawQuery('''
         select distinct tag_id ,name
         from
-           $dbName h
-           inner join tag t
+           ${CommonModel.tableNameHouseHoldAccount} h
+           inner join ${CommonModel.tableNameTag} t
            on h.tag_id = t.id
         where
           h.date like '$date%'
@@ -155,88 +103,6 @@ class HouseholdAccountModel {
 
     return HouseholdAccount.fromList(queryResult);
   }
-
-  // 家計簿テーブル取得（日付検索）
-  static Future<List<Tag>> getAlalTag() async {
-    final db = await _db();
-    final queryResult = await db.rawQuery('''
-        select * from tag t order by t.id
-      ''');
-    print('getAllTag ¥n$queryResult');
-
-    return Tag.fromList(queryResult);
-  }
-
-  // 家計簿テーブル取得（日付検索）
-  static Future<List<Tag>> getVisibleTag() async {
-    final db = await _db();
-    final queryResult = await db.rawQuery('''
-        select * from tag t where t.inVisible = 0 order by t.id
-      ''');
-    print('getAllTag ¥n$queryResult');
-
-    return Tag.fromList(queryResult);
-  }
-
-  static Future<List<Tag>> checkTagName(String name) async {
-    final db = await _db();
-    final queryResult = await db.rawQuery('''
-        select t.inVisible from tag t where t.name = '$name'
-      ''');
-    return Tag.fromList(queryResult);
-  }
-
-  static void insertTag(String name) async {
-    final db = await _db();
-
-    final queryResult = await db.rawQuery('''
-        select distinct max(t.sort) from tag t 
-      ''');
-    final result = Tag.fromList(queryResult);
-    var values = <String, dynamic>{
-      "name": name,
-      "color": null,
-      "sort": result.first.sort + 10,
-    };
-    await db.insert("tag", values);
-    print('insertTag');
-  }
-
-  static Future<void> updateTag(int id, IntBool bool) async {
-    final db = await _db();
-    final data = {'inVisible': bool.value};
-    await db.update('tag', data, where: "id = ?", whereArgs: [id]);
-    print('updateTag');
-  }
-
-  // テーブル取得（日付検索）
-  static void getBytag() async {
-    final db = await _db();
-    final queryResult = await db.rawQuery('''
-        select * 
-        from $dbName
-      ''');
-    print(queryResult);
-  }
-
-  // 家計簿テーブル全取得
-  static Future<List<HouseholdAccount>> getNotes() async {
-    final db = await _db();
-    final queryResult = await db.query(dbName, orderBy: "id");
-    return HouseholdAccount.fromList(queryResult);
-  }
-
-  static Future<List<Map<String, dynamic>>> getItem(int id) async {
-    final db = await _db();
-    return db.query('items', where: "id = ?", whereArgs: [id], limit: 1);
-  }
-
-  // static Future<void> deleteItem(int id) async {
-  //   final db = await _db();
-  //   try {
-  //     await db.delete("items", where: "id = ?", whereArgs: [id]);
-  //   } catch (err) {}
-  // }
 }
 
 enum MoneyType {

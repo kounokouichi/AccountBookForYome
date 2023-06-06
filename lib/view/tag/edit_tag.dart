@@ -62,6 +62,10 @@ class _EditTagState extends ConsumerState<EditTag> {
         context: context,
         builder: (_) {
           return const EditTagCreateDialog();
-        });
+        }).then((isUpdated) {
+      if (isUpdated) {
+        _vm.getAllTag();
+      }
+    });
   }
 }
