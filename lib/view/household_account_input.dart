@@ -69,10 +69,10 @@ class _HouseholdAccountInputState extends ConsumerState<HouseholdAccountInput> {
                 onPressed: () {
                   if (widget.selectingAccountInfo == null) {
                     _vm.registHouseHoldAccount();
-                    _showSnackBar();
+                    // _showSnackBar();
                   } else {
                     _vm.updateHouseHoldAccount(widget.selectingAccountInfo!.id);
-                    _showSnackBar();
+                    // _showSnackBar();
                     Navigator.of(context).pop();
                   }
                 },
@@ -182,8 +182,8 @@ class _HouseholdAccountInputState extends ConsumerState<HouseholdAccountInput> {
     );
   }
 
-  void _showSnackBar() {
-    Common.showSnackBar(context, _vm.message);
-    _vm.message = '';
-  }
+  // void _showSnackBar() {
+  //   Common.showSnackBar(context, _vm.message);
+  //   _vm.message = '';
+  // }
 }

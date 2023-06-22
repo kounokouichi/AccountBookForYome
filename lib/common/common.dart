@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+final messageProvider = StateProvider<String>((ref) => '');
 
 class Common {
   static void showSnackBar(BuildContext context, String message) {

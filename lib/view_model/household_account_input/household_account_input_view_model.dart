@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:yumechanaccountbook/common/common.dart';
 import 'package:yumechanaccountbook/common/date_time_extension.dart';
 import 'package:yumechanaccountbook/common/message.dart';
 import 'package:yumechanaccountbook/data/tag/tag.dart';
@@ -9,9 +10,12 @@ import 'package:yumechanaccountbook/model/tag_model.dart';
 
 final househouldAccountInputProvider = ChangeNotifierProvider.autoDispose
     .family<HousehouldAccountInputViewModel, String>(
-        ((ref, _) => HousehouldAccountInputViewModel()));
+        ((ref, _) => HousehouldAccountInputViewModel(ref)));
 
 class HousehouldAccountInputViewModel extends ChangeNotifier {
+  HousehouldAccountInputViewModel(this.ref);
+  final Ref ref;
+
   TextEditingController moneyController = TextEditingController();
   FocusNode moneyFocusNode = FocusNode();
   TextEditingController memoController = TextEditingController();
@@ -48,7 +52,7 @@ class HousehouldAccountInputViewModel extends ChangeNotifier {
   /// 家計簿の登録
   void registHouseHoldAccount() async {
     if (moneyController.text.isEmpty) {
-      message = Message.E0001;
+      ref.read(messageProvider.notifier).state = Message.E0001;
       return;
     }
 
@@ -70,9 +74,9 @@ class HousehouldAccountInputViewModel extends ChangeNotifier {
       if (!moneyFocusNode.hasFocus) {
         moneyFocusNode.requestFocus();
       }
-      message = Message.S0001;
+      ref.read(messageProvider.notifier).state = Message.S0001;
     } catch (e) {
-      message = Message.E0002;
+      ref.read(messageProvider.notifier).state = Message.E0002;
     }
     return;
   }
