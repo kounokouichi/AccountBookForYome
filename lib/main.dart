@@ -54,7 +54,7 @@ class ShowSnackBar extends ConsumerWidget {
     ref.listen(messageProvider, (_, String message) {
       if (message.isEmpty) return;
       Common.showSnackBar(context, message);
-      // リセット
+      // メッセージをリセット
       ref.read(messageProvider.notifier).state = '';
     });
     return Container();

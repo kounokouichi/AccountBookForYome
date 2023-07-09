@@ -69,10 +69,8 @@ class _HouseholdAccountInputState extends ConsumerState<HouseholdAccountInput> {
                 onPressed: () {
                   if (widget.selectingAccountInfo == null) {
                     _vm.registHouseHoldAccount();
-                    // _showSnackBar();
                   } else {
                     _vm.updateHouseHoldAccount(widget.selectingAccountInfo!.id);
-                    // _showSnackBar();
                     Navigator.of(context).pop();
                   }
                 },
@@ -166,7 +164,9 @@ class _HouseholdAccountInputState extends ConsumerState<HouseholdAccountInput> {
             child: TextButton(
               child: const Text('タグ編集'),
               onPressed: () {
-                Navigator.of(context).pushNamed(rt.Router.editTag);
+                Navigator.of(context)
+                    .pushNamed(rt.Router.editTag)
+                    .then((value) => _vm.searchTag());
               },
             ),
           ),
@@ -181,9 +181,4 @@ class _HouseholdAccountInputState extends ConsumerState<HouseholdAccountInput> {
       ),
     );
   }
-
-  // void _showSnackBar() {
-  //   Common.showSnackBar(context, _vm.message);
-  //   _vm.message = '';
-  // }
 }

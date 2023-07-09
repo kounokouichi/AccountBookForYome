@@ -57,7 +57,10 @@ class _HouseholdAccountConfirmByMonthState
     });
   }
 
+  // 家計簿登録画面を表示
   void _showModalPicker() {
+    // 家計簿登録確認フラグを初期化
+    ref.read(isUpdatedProvider.notifier).state = false;
     showModalBottomSheet(
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
@@ -65,13 +68,17 @@ class _HouseholdAccountConfirmByMonthState
       ),
       context: context,
       builder: (BuildContext context) {
-        return Container(
+        return SizedBox(
           height: MediaQuery.of(context).size.height * 0.8,
           child: HouseholdAccountInput(
             initDate: _vm.selectedDay,
           ),
         );
       },
-    );
+    ).then((_) {
+      if (ref.read(isUpdatedProvider)) {
+        _vm.getByDateOf();
+      }
+    });
   }
 }

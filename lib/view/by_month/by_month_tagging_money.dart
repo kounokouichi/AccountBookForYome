@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:yumechanaccountbook/common/colors.dart';
+import 'package:yumechanaccountbook/common/common.dart';
 import 'package:yumechanaccountbook/data/household_account.dart';
 import 'package:yumechanaccountbook/view/household_account_input.dart';
 import 'package:yumechanaccountbook/view_model/by_month_table_calender_view_model.dart';
@@ -95,6 +96,8 @@ class _ByMonthTaggingMoneyState extends ConsumerState<ByMonthTaggingMoney> {
 
 // 更新できるようにしないと
   void _showModalPicker(HouseholdAccount account) {
+    // 家計簿登録確認フラグを初期化
+    ref.read(isUpdatedProvider.notifier).state = false;
     showModalBottomSheet(
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
@@ -110,6 +113,10 @@ class _ByMonthTaggingMoneyState extends ConsumerState<ByMonthTaggingMoney> {
           ),
         );
       },
-    );
+    ).then((_) {
+      if (ref.read(isUpdatedProvider)) {
+        _vm.getByDateOf();
+      }
+    });
   }
 }

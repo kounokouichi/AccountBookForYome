@@ -52,7 +52,13 @@ class HousehouldAccountInputViewModel extends ChangeNotifier {
   /// 家計簿の登録
   void registHouseHoldAccount() async {
     if (moneyController.text.isEmpty) {
+      // 金額が未入力
       ref.read(messageProvider.notifier).state = Message.E0001;
+      return;
+    }
+    if (selecedTagId <= 0) {
+      // タグが未入力
+      ref.read(messageProvider.notifier).state = Message.E0004;
       return;
     }
 
@@ -69,16 +75,24 @@ class HousehouldAccountInputViewModel extends ChangeNotifier {
         selecedTagId,
         memoController.text,
       );
-      moneyController.clear();
-      memoController.clear();
-      if (!moneyFocusNode.hasFocus) {
-        moneyFocusNode.requestFocus();
-      }
+      clear();
       ref.read(messageProvider.notifier).state = Message.S0001;
+      ref.read(isUpdatedProvider.notifier).state = true;
     } catch (e) {
       ref.read(messageProvider.notifier).state = Message.E0002;
     }
+    notifyListeners();
     return;
+  }
+
+  // 画面の入力欄を全て空にする
+  void clear() {
+    moneyController.clear();
+    selecedTagId = 0;
+    memoController.clear();
+    if (!moneyFocusNode.hasFocus) {
+      moneyFocusNode.requestFocus();
+    }
   }
 
   /// 家計簿の更新
